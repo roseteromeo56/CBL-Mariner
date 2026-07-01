@@ -13,7 +13,7 @@ pushd tarball-tmp
 tar xf "../${name}-${version}.orig.tar.gz"
 
 # CLEAN TARBALL
-rm -r */lib */*/lib
+rm -r -- */lib */*/lib
 find -name '*.jar' -delete
 find -name '*.class' -delete
 
