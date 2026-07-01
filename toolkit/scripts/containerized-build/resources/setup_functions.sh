@@ -49,7 +49,7 @@ build_pkg() {
     local PKG=("$@")
     if [ -z "$PKG" ]; then echo "Please provide pkg name"; return; fi
     rpm -ihv /mnt/INTERMEDIATE_SRPMS/$PKG*.src.rpm
-    $(install_dependencies $PKG)
+    install_dependencies $PKG
     rpmbuild -ba $SPECS_DIR/$PKG/$PKG.spec
 }
 
