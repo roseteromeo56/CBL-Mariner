@@ -21,11 +21,11 @@ function make_tarball {
 
     for package_type in $packages_types; do
         mkdir -p RPMS/$package_type
-        mv *.$package_type.rpm RPMS/$package_type/
+        mv -- *.$package_type.rpm RPMS/$package_type/
     done
 
     mkdir -p RPMS/noarch
-    mv *.noarch.rpm RPMS/noarch/
+    mv -- *.noarch.rpm RPMS/noarch/
 
     echo "-- Packaging into a tarball..."
     tar --remove-files -czvf $archive_name RPMS
