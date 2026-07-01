@@ -69,7 +69,7 @@ find . -name "*.jar" -delete
 find . -name "*.class" -delete
 cd ..
 
-tar czf "${OUT_FOLDER}/${name}-${version}.tar.gz" *
+tar czf "${OUT_FOLDER}/${name}-${version}.tar.gz" -- *
 cd ..
 rm -r tarball-tmp "${name}-${version}.orig.tar.gz"
 
