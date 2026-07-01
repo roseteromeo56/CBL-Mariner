@@ -14,7 +14,7 @@ tar xf "../${name}-${version}.orig.tar.gz"
 
 # CLEAN TARBALL
 # contains scraped news articles (non-free)
-rm -r */src/test/resources
+rm -r -- */src/test/resources
 
 tar czf "../${name}-${version}.tar.gz" *
 cd ..
