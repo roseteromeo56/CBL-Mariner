@@ -108,6 +108,7 @@ dump_ssh()
     local _opt="-i $1 -o BatchMode=yes -o StrictHostKeyChecking=yes"
     local _dir="$KDUMP_PATH/$HOST_IP-$DATEDIR"
     local _host=$2
+    local _remote_vmcore_incomplete
 
     echo "kdump: saving to $_host:$_dir"
 
@@ -123,7 +124,8 @@ dump_ssh()
         scp -q $_opt /proc/vmcore "$_host:$_dir/vmcore-incomplete" || return 1
         ssh $_opt $_host "mv $_dir/vmcore-incomplete $_dir/vmcore" || return 1
     else
-        $CORE_COLLECTOR /proc/vmcore | ssh $_opt $_host "dd bs=512 of=$_dir/vmcore-incomplete" || return 1
+        printf -v _remote_vmcore_incomplete '%q' "$_dir/vmcore-incomplete"
+        $CORE_COLLECTOR /proc/vmcore | ssh $_opt $_host 'dd bs=512 of='"${_remote_vmcore_incomplete}" || return 1
         ssh $_opt $_host "mv $_dir/vmcore-incomplete $_dir/vmcore.flat" || return 1
     fi
 
