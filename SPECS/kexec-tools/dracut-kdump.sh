@@ -117,6 +117,10 @@ dump_ssh()
     local _vmcore_remote=$(quote_for_remote_shell "$_dir/vmcore")
     local _vmcore_flat_remote=$(quote_for_remote_shell "$_dir/vmcore.flat")
     local _host=$2
+    local _dir_remote=$(quote_for_remote_shell "$_dir")
+    local _vmcore_incomplete_remote=$(quote_for_remote_shell "$_dir/vmcore-incomplete")
+    local _vmcore_remote=$(quote_for_remote_shell "$_dir/vmcore")
+    local _vmcore_flat_remote=$(quote_for_remote_shell "$_dir/vmcore.flat")
 
     echo "kdump: saving to $_host:$_dir"
 
