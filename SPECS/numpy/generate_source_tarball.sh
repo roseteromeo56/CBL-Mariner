@@ -75,7 +75,7 @@ cd $TEMPDIR
 git clone --depth 1 https://github.com/numpy/numpy.git
 pushd numpy
 git fetch --all --tags
-git checkout tags/v$PKG_VERSION -b numpy-$PKG_VERSION
+git checkout "tags/v$PKG_VERSION" -b "numpy-$PKG_VERSION"
 git submodule update --depth 1 --init --recursive 
 popd
 mv numpy numpy-$PKG_VERSION
