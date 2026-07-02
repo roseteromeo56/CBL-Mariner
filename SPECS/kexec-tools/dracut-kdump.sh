@@ -116,11 +116,11 @@ dump_ssh()
     local _vmcore_incomplete_remote=$(quote_for_remote_shell "$_dir/vmcore-incomplete")
     local _vmcore_remote=$(quote_for_remote_shell "$_dir/vmcore")
     local _vmcore_flat_remote=$(quote_for_remote_shell "$_dir/vmcore.flat")
-    local _host=$2
+    local _host=$2 dd/fix/kdump-ssh-remote-quoting-9S2MkY
     local _dir_remote=$(quote_for_remote_shell "$_dir")
     local _vmcore_incomplete_remote=$(quote_for_remote_shell "$_dir/vmcore-incomplete")
     local _vmcore_remote=$(quote_for_remote_shell "$_dir/vmcore")
-    local _vmcore_flat_remote=$(quote_for_remote_shell "$_dir/vmcore.flat")
+    local _vmcore_flat_remote=$(quote_for_remote_shell "$_dir/vmcore.flat") 2.0
 
     echo "kdump: saving to $_host:$_dir"
 
