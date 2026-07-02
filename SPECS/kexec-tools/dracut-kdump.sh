@@ -81,6 +81,11 @@ add_dump_code()
     DUMP_INSTRUCTION=$1
 }
 
+quote_for_remote_shell()
+{
+    printf "'%s'" "$(printf "%s" "$1" | sed "s/'/'\\\\''/g")"
+}
+
 dump_raw()
 {
     local _raw=$1
@@ -107,12 +112,16 @@ dump_ssh()
 {
     local _opt="-i $1 -o BatchMode=yes -o StrictHostKeyChecking=yes"
     local _dir="$KDUMP_PATH/$HOST_IP-$DATEDIR"
+    local _dir_remote=$(quote_for_remote_shell "$_dir")
+    local _vmcore_incomplete_remote=$(quote_for_remote_shell "$_dir/vmcore-incomplete")
+    local _vmcore_remote=$(quote_for_remote_shell "$_dir/vmcore")
+    local _vmcore_flat_remote=$(quote_for_remote_shell "$_dir/vmcore.flat")
     local _host=$2
 
     echo "kdump: saving to $_host:$_dir"
 
     cat /var/lib/random-seed > /dev/urandom
-    ssh -q $_opt $_host mkdir -p $_dir || return 1
+    ssh -q $_opt $_host 'mkdir -p '"$_dir_remote" || return 1
 
     save_vmcore_dmesg_ssh ${DMESG_COLLECTOR} ${_dir} "${_opt}" $_host
     save_opalcore_ssh ${_dir} "${_opt}" $_host
@@ -121,10 +130,10 @@ dump_ssh()
 
     if [ "${CORE_COLLECTOR%%[[:blank:]]*}" = "scp" ]; then
         scp -q $_opt /proc/vmcore "$_host:$_dir/vmcore-incomplete" || return 1
-        ssh $_opt $_host "mv $_dir/vmcore-incomplete $_dir/vmcore" || return 1
+        ssh $_opt $_host 'mv '"$_vmcore_incomplete_remote"' '"$_vmcore_remote" || return 1
     else
-        $CORE_COLLECTOR /proc/vmcore | ssh $_opt $_host "dd bs=512 of=$_dir/vmcore-incomplete" || return 1
-        ssh $_opt $_host "mv $_dir/vmcore-incomplete $_dir/vmcore.flat" || return 1
+        $CORE_COLLECTOR /proc/vmcore | ssh $_opt $_host 'dd bs=512 of='"$_vmcore_incomplete_remote" || return 1
+        ssh $_opt $_host 'mv '"$_vmcore_incomplete_remote"' '"$_vmcore_flat_remote" || return 1
     fi
 
     echo "kdump: saving vmcore complete"
