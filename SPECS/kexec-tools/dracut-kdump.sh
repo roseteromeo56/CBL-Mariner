@@ -162,13 +162,19 @@ save_vmcore_dmesg_ssh() {
     local _path=$2
     local _opts="$3"
     local _location=$4
+    local _dmesg_incomplete_path="${_path}/vmcore-dmesg-incomplete.txt"
+    local _dmesg_path="${_path}/vmcore-dmesg.txt"
+    local _dmesg_incomplete_path_escaped=$(printf "%s" "$_dmesg_incomplete_path" | sed "s/'/'\\\\''/g")
+    local _dmesg_path_escaped=$(printf "%s" "$_dmesg_path" | sed "s/'/'\\\\''/g")
+    local _remote_dd_cmd=$(printf "dd of='%s'" "$_dmesg_incomplete_path_escaped")
+    local _remote_mv_cmd=$(printf "mv '%s' '%s'" "$_dmesg_incomplete_path_escaped" "$_dmesg_path_escaped")
 
     echo "kdump: saving vmcore-dmesg.txt"
-    $_dmesg_collector /proc/vmcore | ssh $_opts $_location "dd of=$_path/vmcore-dmesg-incomplete.txt"
+    $_dmesg_collector /proc/vmcore | ssh $_opts "$_location" "$_remote_dd_cmd"
     _exitcode=$?
 
     if [ $_exitcode -eq 0 ]; then
-        ssh -q $_opts $_location mv $_path/vmcore-dmesg-incomplete.txt $_path/vmcore-dmesg.txt
+        ssh -q $_opts "$_location" "$_remote_mv_cmd"
         echo "kdump: saving vmcore-dmesg.txt complete"
     else
         echo "kdump: saving vmcore-dmesg.txt failed"
