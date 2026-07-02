@@ -164,9 +164,11 @@ save_vmcore_dmesg_ssh() {
     local _path=$2
     local _opts="$3"
     local _location=$4
+    local _remote_dmesg_path
 
     echo "kdump: saving vmcore-dmesg.txt"
-    $_dmesg_collector /proc/vmcore | ssh $_opts $_location "dd of=$_path/vmcore-dmesg-incomplete.txt"
+    _remote_dmesg_path=$(printf "%s/vmcore-dmesg-incomplete.txt" "$_path" | sed "s/'/'\\\\''/g")
+    $_dmesg_collector /proc/vmcore | ssh $_opts $_location 'dd of='"'"$_remote_dmesg_path"'"
     _exitcode=$?
 
     if [ $_exitcode -eq 0 ]; then
