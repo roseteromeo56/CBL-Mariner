@@ -75,9 +75,11 @@ function cleanup {
 }
 trap cleanup EXIT
 
-TARBALL_FOLDER="$tmpdir/tarballFolder"
+TARBALL_FOLDER="$tmpdir/tarballFolder" dd/fix/flux-quote-src-tarball
 mkdir -p "$TARBALL_FOLDER"
 cp -- "$SRC_TARBALL" "$tmpdir"
+mkdir -p $TARBALL_FOLDER
+cp "$SRC_TARBALL" "$tmpdir" 2.0
 
 pushd "$tmpdir" > /dev/null
 
