@@ -75,7 +75,7 @@ function installUtils {
 	echo "Installing wget."
 	sudo tdnf install -y wget | dieIfError
 	pushd "/tmp"
-	wget $MAVENBINARY -O maven.rpm
+	wget "$MAVENBINARY" -O maven.rpm
 	echo "Installing pre-built PMC 1.0 maven rpm to provide maven binary needed to build maven itself."
 	sudo rpm -i --nodeps maven.rpm
 	mvn -v
