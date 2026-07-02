@@ -20,17 +20,17 @@ usage() {
 
 [[ -z "$flagFile" || -z "$oldOutputFile" || -z "$newOutputFile" ]] && usage
 
-if [[ ! -f $flagFile ]] || [[ ! -f $oldOutputFile ]]; then
+if [[ ! -f "$flagFile" ]] || [[ ! -f "$oldOutputFile" ]]; then
 	echo "Creating $flagFile"
-	touch $flagFile
+	touch "$flagFile"
 	exit 0
 fi
 
-cmp --silent $oldOutputFile $newOutputFile
+cmp --silent "$oldOutputFile" "$newOutputFile"
 comparisonResult=$?
 
 if [[ $comparisonResult != 0 ]]; then
 	echo "Creating $flagFile"
-	touch $flagFile
+	touch "$flagFile"
 fi
-rm $oldOutputFile
+rm "$oldOutputFile"
