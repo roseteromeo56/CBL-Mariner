@@ -83,7 +83,7 @@ echo "-- create temp folder"
 tmpdir=$(mktemp -d)
 function cleanup {
     echo "+++ cleanup -> remove $tmpdir"
-    rm -rf $tmpdir
+    rm -rf "$tmpdir"
 }
 trap cleanup EXIT
 
