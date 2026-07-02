@@ -123,9 +123,10 @@ dump_ssh()
     if [ "${CORE_COLLECTOR%%[[:blank:]]*}" = "scp" ]; then
         scp -q $_opt /proc/vmcore "$_host:$_dir/vmcore-incomplete" || return 1
         ssh $_opt $_host "mv $_dir/vmcore-incomplete $_dir/vmcore" || return 1
-    else
+    else dd/2.0
+        $CORE_COLLECTOR /proc/vmcore | ssh $_opt $_host dd bs=512 of=\"$_dir/vmcore-incomplete\" || return 1
         printf -v _remote_vmcore_incomplete '%q' "$_dir/vmcore-incomplete"
-        $CORE_COLLECTOR /proc/vmcore | ssh $_opt $_host 'dd bs=512 of='"${_remote_vmcore_incomplete}" || return 1
+        $CORE_COLLECTOR /proc/vmcore | ssh $_opt $_host 'dd bs=512 of='"${_remote_vmcore_incomplete}" || return 1 2.0
         ssh $_opt $_host "mv $_dir/vmcore-incomplete $_dir/vmcore.flat" || return 1
     fi
 
