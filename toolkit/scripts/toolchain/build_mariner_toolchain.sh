@@ -53,7 +53,7 @@ mkdir -pv $MARINER_RPM_DIR/$(uname -m)
 # out/toolchain/toolchain_built_rpms.tar.gz
 
 echo Full CBL-Mariner toolchain build complete
-rm -rvf $MARINER_BUILD_DIR/toolchain/built_rpms_all
+rm -rvf "${MARINER_BUILD_DIR}/toolchain/built_rpms_all"
 mv -v $MARINER_BUILD_DIR/toolchain/built_rpms/ $MARINER_BUILD_DIR/toolchain/built_rpms_all
 pushd $MARINER_BUILD_DIR/toolchain
 tar cvf toolchain_built_rpms_all.tar.gz built_rpms_all
