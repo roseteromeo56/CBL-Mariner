@@ -177,6 +177,8 @@ save_vmcore_dmesg_ssh() {
     local _path=$2
     local _opts="$3"
     local _location=$4
+    local _dmesg_incomplete_remote=$(quote_for_remote_shell "$_path/vmcore-dmesg-incomplete.txt")
+    local _dmesg_remote=$(quote_for_remote_shell "$_path/vmcore-dmesg.txt")
     local _dmesg_incomplete_remote=$(quote_for_remote_shell "${_path}/vmcore-dmesg-incomplete.txt")
     local _dmesg_remote=$(quote_for_remote_shell "${_path}/vmcore-dmesg.txt")
 
