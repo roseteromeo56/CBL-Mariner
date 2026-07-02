@@ -117,6 +117,7 @@ dump_ssh()
     local _vmcore_remote=$(quote_for_remote_shell "$_dir/vmcore")
     local _vmcore_flat_remote=$(quote_for_remote_shell "$_dir/vmcore.flat")
     local _host=$2
+    local _remote_vmcore_incomplete
 
     echo "kdump: saving to $_host:$_dir"
 
@@ -129,11 +130,17 @@ dump_ssh()
     echo "kdump: saving vmcore"
 
     if [ "${CORE_COLLECTOR%%[[:blank:]]*}" = "scp" ]; then
-        scp -q $_opt /proc/vmcore "$_host:$_dir/vmcore-incomplete" || return 1
+        scp -q $_opt /proc/vmcore "$_host:$_dir/vmcore-incomplete" || return 1 dd/fix/kdump-ssh-quoting
         ssh $_opt $_host 'mv '"$_vmcore_incomplete_remote"' '"$_vmcore_remote" || return 1
     else
         $CORE_COLLECTOR /proc/vmcore | ssh $_opt $_host 'dd bs=512 of='"$_vmcore_incomplete_remote" || return 1
         ssh $_opt $_host 'mv '"$_vmcore_incomplete_remote"' '"$_vmcore_flat_remote" || return 1
+        ssh $_opt $_host "mv $_dir/vmcore-incomplete $_dir/vmcore" || return 1
+    else dd/2.0
+        $CORE_COLLECTOR /proc/vmcore | ssh $_opt $_host dd bs=512 of=\"$_dir/vmcore-incomplete\" || return 1
+        printf -v _remote_vmcore_incomplete '%q' "$_dir/vmcore-incomplete"
+        $CORE_COLLECTOR /proc/vmcore | ssh $_opt $_host 'dd bs=512 of='"${_remote_vmcore_incomplete}" || return 1 2.0
+        ssh $_opt $_host "mv $_dir/vmcore-incomplete $_dir/vmcore.flat" || return 1 2.0
     fi
 
     echo "kdump: saving vmcore complete"
@@ -171,9 +178,11 @@ save_vmcore_dmesg_ssh() {
     local _path=$2
     local _opts="$3"
     local _location=$4
+    local _remote_dmesg_path
 
     echo "kdump: saving vmcore-dmesg.txt"
-    $_dmesg_collector /proc/vmcore | ssh $_opts $_location "dd of=$_path/vmcore-dmesg-incomplete.txt"
+    _remote_dmesg_path=$(printf "%s/vmcore-dmesg-incomplete.txt" "$_path" | sed "s/'/'\\\\''/g")
+    $_dmesg_collector /proc/vmcore | ssh $_opts $_location 'dd of='"'"$_remote_dmesg_path"'"
     _exitcode=$?
 
     if [ $_exitcode -eq 0 ]; then
