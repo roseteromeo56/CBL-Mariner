@@ -179,6 +179,8 @@ save_vmcore_dmesg_ssh() {
     local _location=$4
     local _dmesg_incomplete_remote=$(quote_for_remote_shell "$_path/vmcore-dmesg-incomplete.txt")
     local _dmesg_remote=$(quote_for_remote_shell "$_path/vmcore-dmesg.txt")
+    local _dmesg_incomplete_remote=$(quote_for_remote_shell "${_path}/vmcore-dmesg-incomplete.txt")
+    local _dmesg_remote=$(quote_for_remote_shell "${_path}/vmcore-dmesg.txt")
 
     echo "kdump: saving vmcore-dmesg.txt"
     $_dmesg_collector /proc/vmcore | ssh $_opts "$_location" 'dd of='"$_dmesg_incomplete_remote"
