@@ -21,16 +21,24 @@ usage() {
 [[ -z "$flagFile" || -z "$oldOutputFile" || -z "$newOutputFile" ]] && usage
 
 if [[ ! -f "$flagFile" ]] || [[ ! -f "$oldOutputFile" ]]; then
-	echo "Creating $flagFile"
+	echo "Creating $flagFile" dd/fix/quote-update-target-path-expansions
+	touch -- "$flagFile"
+	exit 0
+fi
+
+cmp --silent -- "$oldOutputFile" "$newOutputFile"
 	touch "$flagFile"
 	exit 0
 fi
 
-cmp --silent "$oldOutputFile" "$newOutputFile"
+cmp --silent "$oldOutputFile" "$newOutputFile" 2.0
 comparisonResult=$?
 
 if [[ $comparisonResult != 0 ]]; then
 	echo "Creating $flagFile"
+touch -- "$flagFile"
+fi
+rm -- "$oldOutputFile"
 	touch "$flagFile"
 fi
 rm "$oldOutputFile"
