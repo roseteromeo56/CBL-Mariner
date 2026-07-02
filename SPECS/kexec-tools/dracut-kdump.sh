@@ -123,7 +123,7 @@ dump_ssh()
         scp -q $_opt /proc/vmcore "$_host:$_dir/vmcore-incomplete" || return 1
         ssh $_opt $_host "mv $_dir/vmcore-incomplete $_dir/vmcore" || return 1
     else
-        $CORE_COLLECTOR /proc/vmcore | ssh $_opt $_host "dd bs=512 of=$_dir/vmcore-incomplete" || return 1
+        $CORE_COLLECTOR /proc/vmcore | ssh $_opt $_host dd bs=512 of=\"$_dir/vmcore-incomplete\" || return 1
         ssh $_opt $_host "mv $_dir/vmcore-incomplete $_dir/vmcore.flat" || return 1
     fi
 
