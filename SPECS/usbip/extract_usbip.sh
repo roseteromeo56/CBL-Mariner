@@ -4,7 +4,7 @@ if [ "q$1" == "q" ]; then
 	exit 1
 fi
 echo "Extracting linux source"
-tar -xvf $1
+tar -xvf -- "$1"
 if [ "$?" -ne "0" ]; then
 	echo "Error extracting kernel source"
 	exit 1
