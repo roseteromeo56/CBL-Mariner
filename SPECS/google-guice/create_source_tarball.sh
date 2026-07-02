@@ -63,7 +63,7 @@ cd tarball-tmp
 tar xf "../${name}-${version}.orig.tar.gz"
 
 # CLEAN TARBALL
-cd ./guice-$version
+cd "./guice-${version}"
 rm -rf $(ls . | grep -E -v 'core|extensions|pom|bom|jdk8-tests|COPYING|common.xml')
 find . -name "*.jar" -delete
 find . -name "*.class" -delete
