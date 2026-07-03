@@ -12,9 +12,9 @@ TLS_CERT=$2
 TLS_KEY=$3
 CA_CERT=$4
 USER_DATA_TEMP=$USER_DATA.tmp
-TLS_CERT_BASENAME=$(basename $TLS_CERT)
-TLS_KEY_BASENAME=$(basename $TLS_KEY)
-CA_CERT_BASENAME=$(basename $CA_CERT)
+TLS_CERT_BASENAME=$(basename -- "$TLS_CERT")
+TLS_KEY_BASENAME=$(basename -- "$TLS_KEY")
+CA_CERT_BASENAME=$(basename -- "$CA_CERT")
 
 while IFS= read -r line || [ -n "$line" ]; do
     echo $line
