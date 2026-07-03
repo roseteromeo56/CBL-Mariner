@@ -18,7 +18,7 @@ sha_component_tag=$(sha256sum ./container/toolchain-sha256sums ./container/toolc
 if [ "$INCREMENTAL_TOOLCHAIN" != "y" ] || [ -z "$(docker images -q marinertoolchain_populated:${sha_component_tag} 2>/dev/null)" ]; then
     echo "No existing container with tag ${sha_component_tag}, building..."
 
-    ./toolchain_verify.sh $MARINER_BUILD_DIR
+    ./toolchain_verify.sh "$MARINER_BUILD_DIR"
 
     # Cleanup
     docker images -a
