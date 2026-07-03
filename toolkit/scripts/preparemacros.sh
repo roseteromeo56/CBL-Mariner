@@ -19,7 +19,7 @@ usage() {
 [ ! -f $3 ] && echo "Invalid rpm manifest $3" && usage
 [ ! -d $2 ] && echo "Input rpm directory $2 does not exist" && usage
 
-mkdir -p ${dir}
+mkdir -p -- "${dir}"
 cd ${dir}
 
 echo "Expanding rpms into MACRO_DIR ${dir}"
