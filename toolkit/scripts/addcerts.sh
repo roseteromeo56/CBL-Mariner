@@ -17,9 +17,9 @@ TLS_KEY_BASENAME=$(basename -- "$TLS_KEY")
 CA_CERT_BASENAME=$(basename -- "$CA_CERT")
 
 while IFS= read -r line || [ -n "$line" ]; do
-    echo $line
+    echo "$line"
     echo "$line" >> $USER_DATA_TEMP
-    if  [ $line = "#cloud-config" ]; then
+    if [ "$line" = "#cloud-config" ]; then
         echo 'write_files:' >> $USER_DATA_TEMP
         # TLS_CERT
         echo '- encoding: gzip' >> $USER_DATA_TEMP
