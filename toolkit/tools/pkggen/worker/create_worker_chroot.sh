@@ -99,11 +99,11 @@ else
     # Populating the SQLite database with package info.
     while read -r package || [ -n "$package" ]; do
         full_rpm_path=$(find "$rpm_path" -name "$package" -type f 2>>"$chroot_log")
-        cp $full_rpm_path $chroot_builder_folder/$package
+        cp -- "$full_rpm_path" "$chroot_builder_folder/$package"
         echo "Adding RPM DB entry to worker chroot $(format_progress): $package." | tee -a "$chroot_log"
         increment_progress
         chroot "$chroot_builder_folder" rpm -i -v --nodeps --noorder --force --dbpath="$TEMP_DB_PATH" --justdb "$package" &>> "$chroot_log"
-        chroot "$chroot_builder_folder" rm $package
+        chroot "$chroot_builder_folder" rm -- "$package"
     done < "$packages"
     echo "Overwriting old RPM database with the results of the conversion." | tee -a "$chroot_log"
     chroot "$chroot_builder_folder" rm -rf /var/lib/rpm
