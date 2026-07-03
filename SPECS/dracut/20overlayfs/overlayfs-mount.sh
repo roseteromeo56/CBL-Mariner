@@ -66,7 +66,7 @@ mount_volatile_persistent_volume() {
     else
         # Check if /etc/mdadm.conf exists.
         if [ -f "/etc/mdadm.conf" ]; then
-            mdadm --assemble ${_volume} || \
+            mdadm --assemble "${_volume}" || \
                 die "Failed to assemble RAID volume."
         fi
 
@@ -117,7 +117,7 @@ mount_overlayfs() {
 
         if [[ "$volume" == "" ]]; then
             overlay_mount_with_cnt="${OVERLAY_MOUNT}/${cnt}"
-            mount_volatile_persistent_volume "volatile" $overlay_mount_with_cnt
+            mount_volatile_persistent_volume "volatile" "${overlay_mount_with_cnt}"
         else
             if [[ -n "${volume_mount_map[$volume]}" ]]; then
                 # Volume already mounted, retrieve existing mount point from map.
@@ -125,7 +125,7 @@ mount_overlayfs() {
             else
                 # Not in map, so mount and update the map.
                 overlay_mount_with_cnt="${OVERLAY_MOUNT}/${cnt}"
-                mount_volatile_persistent_volume $volume $overlay_mount_with_cnt
+                mount_volatile_persistent_volume "${volume}" "${overlay_mount_with_cnt}"
                 volume_mount_map[$volume]=$overlay_mount_with_cnt
             fi
         fi
