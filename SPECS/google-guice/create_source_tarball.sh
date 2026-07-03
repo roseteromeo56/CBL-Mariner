@@ -69,8 +69,9 @@ rm -rf $(ls . | grep -E -v 'core|extensions|pom|bom|jdk8-tests|COPYING|common.xm
 find . -name "*.jar" -delete
 find . -name "*.class" -delete
 cd ..
-
-tar czf "${OUT_FOLDER}/${name}-${version}.tar.gz" -- ./*
+ dd/fix-glob-option-injection
+tar czf "${OUT_FOLDER}/${name}-${version}.tar.gz" -- *
+tar czf "${OUT_FOLDER}/${name}-${version}.tar.gz" -- ./* 2.0
 cd ..
 rm -r tarball-tmp "${name}-${version}.orig.tar.gz"
 
