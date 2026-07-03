@@ -89,16 +89,16 @@ function create_eth_cfg_pri_redhat {
 function create_bond_cfg_redhat {
 	local fn=$cfgdir/ifcfg-$1
 
-	rm -f $fn
-	echo DEVICE=$1 >>$fn
-	echo TYPE=Bond >>$fn
-	echo BOOTPROTO=dhcp >>$fn
-	echo ONBOOT=yes >>$fn
-	echo NM_CONTROLLED=no >>$fn
-	echo PEERDNS=yes >>$fn
-	echo IPV6INIT=yes >>$fn
-	echo BONDING_MASTER=yes >>$fn
-	echo BONDING_OPTS=\"mode=active-backup miimon=100 primary=$2\" >>$fn
+	rm -f "$fn"
+	echo "DEVICE=$1" >>"$fn"
+	echo "TYPE=Bond" >>"$fn"
+	echo "BOOTPROTO=dhcp" >>"$fn"
+	echo "ONBOOT=yes" >>"$fn"
+	echo "NM_CONTROLLED=no" >>"$fn"
+	echo "PEERDNS=yes" >>"$fn"
+	echo "IPV6INIT=yes" >>"$fn"
+	echo "BONDING_MASTER=yes" >>"$fn"
+	echo "BONDING_OPTS=\"mode=active-backup miimon=100 primary=$2\"" >>"$fn"
 }
 
 function create_eth_cfg_ubuntu {
