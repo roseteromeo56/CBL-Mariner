@@ -1,7 +1,7 @@
 Summary:        Cron Daemon
 Name:           cronie
 Version:        1.5.7
-Release:        3%{?dist}
+Release:        4%{?dist}
 License:        GPLv2+ AND MIT AND BSD AND ISC
 Vendor:         Microsoft Corporation
 Distribution:   Mariner

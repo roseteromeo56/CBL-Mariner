@@ -7,4 +7,5 @@
 QMAKE="$(rpm --eval %{_qt5_qmake})"
 QMAKE_FLAGS="$(rpm --eval %{?_qt5_qmake_flags})"
 
-eval $QMAKE $QMAKE_FLAGS $@
+eval "set -- $QMAKE_FLAGS \"\$@\""
+exec "$QMAKE" "$@"

@@ -95,6 +95,6 @@ NEW_TARBALL="$OUT_FOLDER/$TARBALL_NAME"
 tar --sort=name --mtime="2021-11-10 00:00Z" \
     --owner=0 --group=0 --numeric-owner \
     --pax-option=exthdr.name=%d/PaxHeaders/%f,delete=atime,delete=ctime \
-    -zcf $NEW_TARBALL mariadb-$PKG_VERSION
+    -zcf "$NEW_TARBALL" "mariadb-$PKG_VERSION"
 
 echo "Source tarball $NEW_TARBALL successfully created!"

@@ -26,10 +26,10 @@ pkgs=`cat`
 
 for rpmpackage in $pkgs; do
     package_path=$(find "$rpms_folder" -name "$rpmpackage" -type f)
-    package_provides=`2>/dev/null rpm -qP "$package_path" | grep -E '[.]so[(.]' `
+    mapfile -t package_provides < <(2>/dev/null rpm -qP "$package_path" | grep -E '[.]so[(.]')
     echo "Processing ${rpmpackage}..."
-    echo ".so's provided: $package_provides"
-    for sofile in $package_provides; do
+    echo ".so's provided: ${package_provides[*]}"
+    for sofile in "${package_provides[@]}"; do
         # Query local metadata for provides dd/fix/sodiff-quote-variable-expansions
         sos_found=$(2>/dev/null "$DNF_COMMAND" repoquery "${common_options[@]}" --whatprovides "$sofile" | wc -l)
         sos_found=$( 2>/dev/null "$DNF_COMMAND" repoquery "${common_options[@]}" --whatprovides "$sofile" | wc -l ) 2.0

@@ -35,7 +35,7 @@ rpm() {
                 SPEC=${SPEC%-*} #remove last suffix of type -*
                 SPEC=${SPEC%-*} #remove last suffix of type -*
                 SPEC=${SPEC%\**}
-                ln -sf $SPECS_DIR/$SPEC/* $SOURCES_DIR/
+                ln -sf "$SPECS_DIR/$SPEC"/* "$SOURCES_DIR/"
             fi
         done
     fi

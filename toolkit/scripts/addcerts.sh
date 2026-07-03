@@ -10,7 +10,7 @@ echo Parameters passed: $@
 USER_DATA=$1
 TLS_CERT=$2
 TLS_KEY=$3
-CA_CERT=$4
+CA_CERT=$4 dd/fix/addcerts-quoted-expansions
 USER_DATA_TEMP="${USER_DATA}.tmp"
 TLS_CERT_BASENAME=$(basename "$TLS_CERT")
 TLS_KEY_BASENAME=$(basename "$TLS_KEY")
@@ -21,6 +21,16 @@ while IFS= read -r line || [ -n "$line" ]; do
     echo "$line" >> "$USER_DATA_TEMP"
     if [ "$line" = "#cloud-config" ]; then
         echo 'write_files:' >> "$USER_DATA_TEMP"
+USER_DATA_TEMP=$USER_DATA.tmp
+TLS_CERT_BASENAME=$(basename -- "$TLS_CERT")
+TLS_KEY_BASENAME=$(basename -- "$TLS_KEY")
+CA_CERT_BASENAME=$(basename -- "$CA_CERT")
+
+while IFS= read -r line || [ -n "$line" ]; do
+    echo "$line"
+    echo "$line" >> $USER_DATA_TEMP
+    if [ "$line" = "#cloud-config" ]; then
+        echo 'write_files:' >> $USER_DATA_TEMP 2.0
         # TLS_CERT
         echo '- encoding: gzip' >> "$USER_DATA_TEMP"
         echo '  content: !!binary |' >> "$USER_DATA_TEMP"
