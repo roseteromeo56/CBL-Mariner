@@ -50,7 +50,7 @@ if [ -z "$PKG_VERSION" ]; then
     echo "--pkgVersion parameter cannot be empty"
     exit 1
 fi
-echo $PKG_VERSION
+echo "$PKG_VERSION"
 version=$PKG_VERSION
 
 
