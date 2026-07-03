@@ -34,21 +34,21 @@ if [ ! -f "${INPUT_NOTE_BINARY}" ]; then
 fi
 
 echo "${OBJCOPY} -O binary -j ${SECTION_NAME} ${INPUT_BINARY} ${SECTION_OUTPUT}"
-${OBJCOPY} -O binary -j ${SECTION_NAME} ${INPUT_BINARY} ${SECTION_OUTPUT};
+"${OBJCOPY}" -O binary -j "${SECTION_NAME}" "${INPUT_BINARY}" "${SECTION_OUTPUT}"
 if [ $? != 0 ]; then
     echo "FAIL... Extracting ${SECTION_NAME} section attempt failed. ${SECTION_OUTPUT} file is incomplete..."
-    rm -fv ${SECTION_OUTPUT}
+    rm -fv "${SECTION_OUTPUT}"
     exit -2
 fi
 
 printf "\nChecking if .note.package and note section in ${INPUT_BINARY} are identical...\n"
 if ! cmp -s "${INPUT_NOTE_BINARY}" "${SECTION_OUTPUT}" ; then
     echo "FAIL... ${SECTION_NAME} is not stamped into ${INPUT_BINARY} file..."
-    rm -fv ${SECTION_OUTPUT}
+    rm -fv "${SECTION_OUTPUT}"
     exit -3
 fi
 
-rm -fv ${SECTION_OUTPUT}
+rm -fv "${SECTION_OUTPUT}"
 printf "\nSUCCESS... Verified ${INPUT_BINARY} successfully stamped...\n"
 exit 0
 
