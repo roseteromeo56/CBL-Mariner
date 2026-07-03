@@ -35,7 +35,7 @@ rpm() {
                 SPEC=${SPEC%-*} #remove last suffix of type -*
                 SPEC=${SPEC%-*} #remove last suffix of type -*
                 SPEC=${SPEC%\**}
-                ln -sf $SPECS_DIR/$SPEC/* $SOURCES_DIR/
+                ln -sf "$SPECS_DIR/$SPEC"/* "$SOURCES_DIR/"
             fi
         done
     fi
@@ -49,7 +49,7 @@ build_pkg() {
     local PKG=("$@")
     if [ -z "$PKG" ]; then echo "Please provide pkg name"; return; fi
     rpm -ihv /mnt/INTERMEDIATE_SRPMS/$PKG*.src.rpm
-    $(install_dependencies $PKG)
+    install_dependencies "$PKG"
     rpmbuild -ba $SPECS_DIR/$PKG/$PKG.spec
 }
 

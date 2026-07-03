@@ -77,7 +77,7 @@ cd $TEMPDIR
 git clone --depth 1 https://github.com/grpc/grpc.git
 pushd grpc
 git fetch --all --tags
-git checkout tags/v$PKG_VERSION -b grpc-$PKG_VERSION
+git checkout "tags/v$PKG_VERSION" -b "grpc-$PKG_VERSION"
 git submodule update --init
 popd
 mv grpc/third_party third_party

@@ -75,18 +75,20 @@ function cleanup {
 }
 trap cleanup EXIT
 
-TARBALL_FOLDER="$tmpdir/tarballFolder"
+TARBALL_FOLDER="$tmpdir/tarballFolder" dd/fix/flux-quote-src-tarball
+mkdir -p "$TARBALL_FOLDER"
+cp -- "$SRC_TARBALL" "$tmpdir"
 mkdir -p $TARBALL_FOLDER
-cp $SRC_TARBALL $tmpdir
+cp "$SRC_TARBALL" "$tmpdir" 2.0
 
-pushd $tmpdir > /dev/null
+pushd "$tmpdir" > /dev/null
 
 PKG_NAME="flux"
 NAME_VER="$PKG_NAME-$PKG_VERSION"
 VENDOR_TARBALL="$OUT_FOLDER/$NAME_VER-cargo.tar.gz"
 
 echo "Unpacking source tarball..."
-tar -xf $SRC_TARBALL
+tar -xf "$SRC_TARBALL"
 
 echo "Vendor cargo ..."
 cd $NAME_VER/libflux

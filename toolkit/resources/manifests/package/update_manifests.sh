@@ -180,7 +180,7 @@ remove_packages_for_pkggen_core () {
     sed -i '/perl-Unicode-UCD/d' $TmpPkgGen
     sed -i '/perl-User/d' $TmpPkgGen
     sed -i '/perl-utils/d' $TmpPkgGen
-    sed -i '/perl-version/d' $TmpPkgGen
+    sed -i '/perl-version/d' "$TmpPkgGen"
     sed -i '/perl-vmsish/d' $TmpPkgGen
     sed -i '/perl-libintl/d' $TmpPkgGen
     sed -i '/perl-Test-Warnings/d' $TmpPkgGen

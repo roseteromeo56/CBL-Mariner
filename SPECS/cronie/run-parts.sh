@@ -36,13 +36,12 @@ for i in $(LC_ALL=C; echo $1/*[^~,]); do
 		if [ -r $1/whitelist ]; then
 			grep -q "^$(basename $i)$" $1/whitelist && continue
 		fi
-		logger -p cron.notice -t "run-parts[$$]" "($1) starting $(basename $i)"
+		logger -p cron.notice -t "run-parts[$$]" "($1) starting $(basename "$i")"
 		echo "${i}:"
 		echo 
-		$i 2>&1 
-		logger -i -p cron.notice -t "run-parts[$$]" "($1) finished $(basename $i)"
+		"$i" 2>&1 
+		logger -i -p cron.notice -t "run-parts[$$]" "($1) finished $(basename "$i")"
 	fi
 done
 
 exit 0
-

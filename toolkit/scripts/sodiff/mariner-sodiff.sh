@@ -14,23 +14,25 @@ mkdir -p "$sodiff_out_dir"
 
 # Prepare mariner/ubuntu compatibility calls
 
-common_options="-c $repo_file_path --releasever $mariner_version"
+common_options=(-c "$repo_file_path" --releasever "$mariner_version")
 
 DNF_COMMAND=dnf
-# Cache RPM metadata
->/dev/null dnf $common_options -y makecache
+# Cache RPM metadata dd/fix/sodiff-quote-variable-expansions
+>/dev/null dnf "${common_options[@]}" -y makecache
+>/dev/null "$DNF_COMMAND" "${common_options[@]}" -y makecache 2.0
 
 # Get packages from stdin
 pkgs=`cat`
 
 for rpmpackage in $pkgs; do
     package_path=$(find "$rpms_folder" -name "$rpmpackage" -type f)
-    package_provides=`2>/dev/null rpm -qP "$package_path" | grep -E '[.]so[(.]' `
+    mapfile -t package_provides < <(2>/dev/null rpm -qP "$package_path" | grep -E '[.]so[(.]')
     echo "Processing ${rpmpackage}..."
-    echo ".so's provided: $package_provides"
-    for sofile in $package_provides; do
-        # Query local metadata for provides
-        sos_found=$( 2>/dev/null $DNF_COMMAND repoquery $common_options --whatprovides $sofile | wc -l )
+    echo ".so's provided: ${package_provides[*]}"
+    for sofile in "${package_provides[@]}"; do
+        # Query local metadata for provides dd/fix/sodiff-quote-variable-expansions
+        sos_found=$(2>/dev/null "$DNF_COMMAND" repoquery "${common_options[@]}" --whatprovides "$sofile" | wc -l)
+        sos_found=$( 2>/dev/null "$DNF_COMMAND" repoquery "${common_options[@]}" --whatprovides "$sofile" | wc -l ) 2.0
         echo "Number of .so files found: $sos_found"
         if [ "$sos_found" -eq 0 ] ; then
             # SO file not found, meaning this might be a new .SO
@@ -40,15 +42,16 @@ for rpmpackage in $pkgs; do
             # Remove version part from .SO file
             sofile_no_ver=$(echo "$sofile" | sed -E 's/[.]so[(.].+/.so/')
 
-            # check for generic .so in the repo
-            sos_found=$( 2>/dev/null $DNF_COMMAND repoquery $common_options --whatprovides "${sofile_no_ver}*" | wc -l )
+            # check for generic .so in the repo dd/fix/sodiff-quote-variable-expansions
+            sos_found=$(2>/dev/null "$DNF_COMMAND" repoquery "${common_options[@]}" --whatprovides "${sofile_no_ver}*" | wc -l)
+            sos_found=$( 2>/dev/null "$DNF_COMMAND" repoquery "${common_options[@]}" --whatprovides "${sofile_no_ver}*" | wc -l ) 2.0
             echo "Number of non-versioned .so files found: $sos_found"
             if ! [ "$sos_found" -eq 0 ] ; then
                 # Generic version of SO was found.
                 # This means it's a new version of a preexisting SO.
                 # Log which packages depend on this functionality
                 echo "Packages that require $sofile_no_ver:"
-                2>/dev/null $DNF_COMMAND repoquery $common_options -s --whatrequires "${sofile_no_ver}*" | sed -E 's/[.][^.]+[.]src[.]rpm//' | tee "$sodiff_out_dir"/"require_${sofile}"
+                2>/dev/null "$DNF_COMMAND" repoquery "${common_options[@]}" -s --whatrequires "${sofile_no_ver}*" | sed -E 's/[.][^.]+[.]src[.]rpm//' | tee "$sodiff_out_dir"/"require_${sofile}"
             fi
         fi
     done

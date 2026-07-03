@@ -50,7 +50,7 @@ if [ -z "$PKG_VERSION" ]; then
     echo "--pkgVersion parameter cannot be empty"
     exit 1
 fi
-echo $PKG_VERSION
+echo "$PKG_VERSION"
 version=$PKG_VERSION
 
 
@@ -62,14 +62,16 @@ mkdir tarball-tmp
 cd tarball-tmp
 tar xf "../${name}-${version}.orig.tar.gz"
 
-# CLEAN TARBALL
-cd ./guice-$version
+# CLEAN TARBALL dd/fix/google-guice-quoted-version-expansion
+cd "./guice-${version}"
+cd "./guice-$version" 2.0
 rm -rf $(ls . | grep -E -v 'core|extensions|pom|bom|jdk8-tests|COPYING|common.xml')
 find . -name "*.jar" -delete
 find . -name "*.class" -delete
 cd ..
-
+ dd/fix-glob-option-injection
 tar czf "${OUT_FOLDER}/${name}-${version}.tar.gz" -- *
+tar czf "${OUT_FOLDER}/${name}-${version}.tar.gz" -- ./* 2.0
 cd ..
 rm -r tarball-tmp "${name}-${version}.orig.tar.gz"
 

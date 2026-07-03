@@ -20,6 +20,6 @@ mv asm-${gittag}-* ${name}-${version}
 # Remove all jar files
 find -name '*.jar' -delete
 
-tar cJf "../${name}-${version}.tar.xz" *
+tar cJf "../${name}-${version}.tar.xz" -- *
 cd ..
 rm -r tarball-tmp "${name}-${version}.orig.tar.gz"

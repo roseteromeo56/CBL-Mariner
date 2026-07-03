@@ -17,18 +17,21 @@ write_rpms_from_spec () {
         return 0
     fi
 
-    version=$(rpmspec -q $1 --define="with_check 0" --define="_sourcedir $spec_dir" --define="dist $DIST_TAG" --qf="%{VERSION}" --srpm 2>/dev/null)
-    rpmWithoutExtension=$(rpmspec -q $1 --define="with_check 0" --define="_sourcedir $spec_dir" --define="dist $DIST_TAG" --target=$ARCH --qf="%{nvra}\n" 2>/dev/null)
-
-    for rpm in $rpmWithoutExtension
+    version=$(rpmspec -q "$1" --define="with_check 0" --define="_sourcedir $spec_dir" --define="dist $DIST_TAG" --qf="%{VERSION}" --srpm 2>/dev/null)
+    rpmWithoutExtension=$(rpmspec -q "$1" --define="with_check 0" --define="_sourcedir $spec_dir" --define="dist $DIST_TAG" --target="$ARCH" --qf="%{nvra}\n" 2>/dev/null) dd/fix/quote-manifest-rpm-expansion
+    while IFS= read -r rpm
     do
-        echo "$rpm.rpm" >> $2
+        if [[ -z "$rpm" ]]; then
+            continue
+        fi
+    while IFS= read -r rpm; do 2.0
+        echo "$rpm.rpm" >> "$2"
 
         # Since we cannot know if a debuginfo package is generated at check time, we are appending it unilaterally to the file.
         # The consequence of this action yields a manifest file that is a superset of the real manifest file.
-        debuginfo_pkg=$(sed "0,/-$version/s//-debuginfo-$version/" <<< $rpm)
-        echo "$debuginfo_pkg.rpm" >> $2
-    done
+        debuginfo_pkg=$(sed "0,/-$version/s//-debuginfo-$version/" <<< "$rpm")
+        echo "$debuginfo_pkg.rpm" >> "$2"
+    done <<< "$rpmWithoutExtension"
 }
 
 write_rpms_from_toolchain () {
