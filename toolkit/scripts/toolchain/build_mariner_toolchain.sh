@@ -6,7 +6,7 @@ set -x
 set -e
 
 echo Begin building CBL-Mariner toolchain
-echo Parameters passed: $@
+echo "Parameters passed: $@"
 
 MARINER_DIST_TAG=$1
 MARINER_BUILD_NUMBER=$2
@@ -28,9 +28,9 @@ TIMESTAMP_FILE_PATH=${15}
 # =====================================================
 
 # Create toolchain subdirectory in out folder
-mkdir -pv $MARINER_BUILD_DIR/toolchain
-mkdir -pv $MARINER_RPM_DIR/noarch
-mkdir -pv $MARINER_RPM_DIR/$(uname -m)
+mkdir -pv "${MARINER_BUILD_DIR}/toolchain"
+mkdir -pv "${MARINER_RPM_DIR}/noarch"
+mkdir -pv "${MARINER_RPM_DIR}/$(uname -m)"
 
 ./build_official_toolchain_rpms.sh \
     "$MARINER_DIST_TAG" \
@@ -54,8 +54,8 @@ mkdir -pv $MARINER_RPM_DIR/$(uname -m)
 
 echo Full CBL-Mariner toolchain build complete
 rm -rvf "${MARINER_BUILD_DIR}/toolchain/built_rpms_all"
-mv -v $MARINER_BUILD_DIR/toolchain/built_rpms/ $MARINER_BUILD_DIR/toolchain/built_rpms_all
-pushd $MARINER_BUILD_DIR/toolchain
+mv -v "${MARINER_BUILD_DIR}/toolchain/built_rpms/" "${MARINER_BUILD_DIR}/toolchain/built_rpms_all"
+pushd "${MARINER_BUILD_DIR}/toolchain"
 tar cvf toolchain_built_rpms_all.tar.gz built_rpms_all
 popd
 # Output:
@@ -63,7 +63,7 @@ popd
 # out/toolchain/toolchain_built_rpms_all.tar.gz
 
 echo Creating toolchain source RPM archive
-pushd $MARINER_BUILD_DIR/toolchain
+pushd "${MARINER_BUILD_DIR}/toolchain"
 tar -C ./populated_toolchain/usr/src/mariner -cvf toolchain_built_srpms_all.tar.gz SRPMS
 popd
 
@@ -76,5 +76,5 @@ if [ "$INCREMENTAL_TOOLCHAIN" = "y" ]; then
 fi
 
 echo Printing list of built toolchain RPMS:
-ls -la $MARINER_BUILD_DIR/toolchain/built_rpms_all
-ls -la $MARINER_BUILD_DIR/toolchain/built_rpms_all | wc
+ls -la "${MARINER_BUILD_DIR}/toolchain/built_rpms_all"
+ls -la "${MARINER_BUILD_DIR}/toolchain/built_rpms_all" | wc
