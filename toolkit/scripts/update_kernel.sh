@@ -7,8 +7,8 @@ set -e
 
 # $1 = TARGET_SPEC
 function copy_local_tarball {
-    DESTINATION_FOLDER=$(dirname $1)
-    cp $DOWNLOAD_FILE_PATH $DESTINATION_FOLDER
+    DESTINATION_FOLDER="$(dirname -- "$1")"
+    cp -- "$DOWNLOAD_FILE_PATH" "$DESTINATION_FOLDER"
 }
 
 # $1 = spec name
