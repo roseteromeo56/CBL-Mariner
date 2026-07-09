@@ -77,7 +77,7 @@ trap cleanup EXIT
 
 TARBALL_FOLDER="$tmpdir/tarballFolder"
 mkdir -p $TARBALL_FOLDER
-cp $SRC_TARBALL $tmpdir
+cp "$SRC_TARBALL" "$tmpdir"
 
 pushd $tmpdir > /dev/null
 
@@ -86,7 +86,7 @@ NAME_VER="$PKG_NAME-$PKG_VERSION"
 VENDOR_TARBALL="$OUT_FOLDER/$NAME_VER-vendor.tar.gz"
 
 echo "Unpacking source tarball..."
-tar -xf $SRC_TARBALL
+tar -xf "$SRC_TARBALL"
 
 echo "Vendor go modules..."
 cd $NAME_VER
