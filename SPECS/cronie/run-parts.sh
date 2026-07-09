@@ -25,8 +25,8 @@ for i in $(LC_ALL=C; echo $1/*[^~,]); do
 	[ "${i%,v}" = "${i}" ] || continue
 
 	# jobs.deny and jobs.allow
-	if [ -r $1/jobs.deny ]; then
-		grep -q "^$(basename $i)$" $1/jobs.deny && continue
+	if [ -r "$1/jobs.deny" ]; then
+		grep -q "^$(basename "$i")$" "$1/jobs.deny" && continue
 	fi
 	if [ -r S1/jobs.allow ]; then
 		grep -q "^$(basename $i)$" $1/job.allow || continue
