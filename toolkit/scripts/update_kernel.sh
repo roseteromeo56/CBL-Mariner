@@ -28,7 +28,7 @@ function download {
     mkdir -p $TMPDIR
     pushd $TMPDIR
     echo Downloading $FULL_URL
-    wget $FULL_URL -O $TARBALL_NAME
+    wget "$FULL_URL" -O "$TARBALL_NAME"
     # if [ $? -gt 0 ]; then
     #     echo "$FULL_URL failed to be reached. Does the version exist on CBL-Mariner-Linux-Kernel?"
     #     return 1
