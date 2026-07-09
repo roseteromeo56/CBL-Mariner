@@ -85,7 +85,7 @@ NAME_VER="$PKG_NAME-$PKG_VERSION"
 VENDOR_TARBALL="$OUT_FOLDER/$NAME_VER-vendor.tar.gz"
 
 echo "Unpacking source tarball..."
-tar -xf $SRC_TARBALL
+tar -xf "$SRC_TARBALL"
 
 cd "$NAME_VER"
 echo "Get vendored modules"
