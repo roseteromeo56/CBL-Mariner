@@ -20,7 +20,7 @@ usage() {
 [ ! -d $2 ] && echo "Input rpm directory $2 does not exist" && usage
 
 mkdir -p -- "${dir}"
-cd ${dir}
+cd -- "${dir}"
 
 echo "Expanding rpms into MACRO_DIR ${dir}"
 while read p || [ -n "$p" ]; do

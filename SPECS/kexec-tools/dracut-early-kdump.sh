@@ -50,7 +50,7 @@ early_kdump_load()
 
     $KEXEC ${EARLY_KEXEC_ARGS} $standard_kexec_args \
         --command-line="$EARLY_KDUMP_CMDLINE" \
-        --initrd=$EARLY_KDUMP_INITRD $EARLY_KDUMP_KERNEL
+        --initrd="$EARLY_KDUMP_INITRD" "$EARLY_KDUMP_KERNEL"
     if [ $? == 0 ]; then
         echo "kexec: loaded early-kdump kernel"
         return 0
