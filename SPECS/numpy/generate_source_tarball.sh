@@ -61,7 +61,7 @@ if [ -z "$PKG_VERSION" ]; then
     echo "--pkgVersion parameter cannot be empty"
     exit 1
 fi
-OUT_FOLDER=$(realpath $OUT_FOLDER)
+OUT_FOLDER=$(realpath "$OUT_FOLDER")
 echo "-- create temp folder"
 TEMPDIR=$(mktemp -d)
 function cleanup {
