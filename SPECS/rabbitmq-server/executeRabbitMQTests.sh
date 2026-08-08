@@ -67,7 +67,7 @@ echo ""
 
 
 # Remove existing/old test directories
-rm -rf $BAZEL_DIR $MANDOC_DIR $DAEMONIZE_DIR
+rm -rf "$BAZEL_DIR" "$MANDOC_DIR" "$DAEMONIZE_DIR"
 
 # Required dependencies are installed
 dnf install msopenjdk-11 wget git build-essential python3 zip unzip
@@ -78,18 +78,18 @@ wget https://mandoc.bsd.lv/snapshots/mandoc-1.14.6.tar.gz
 git clone http://github.com/bmc/daemonize.git
 
 # Install bazel 6.0.0
-mkdir $BAZEL_DIR
-mv bazel-6.0.0-dist.zip $BAZEL_DIR/bazel-6.0.0-dist.zip
-pushd $BAZEL_DIR
+mkdir "$BAZEL_DIR"
+mv bazel-6.0.0-dist.zip "$BAZEL_DIR/bazel-6.0.0-dist.zip"
+pushd "$BAZEL_DIR"
 unzip bazel-6.0.0-dist.zip
 env EXTRA_BAZEL_ARGS="--tool_java_runtime_version=local_jdk" bash ./compile.sh
-cp output/bazel $BAZEL_INSTALL_DIR/bazel
+cp output/bazel "$BAZEL_INSTALL_DIR/bazel"
 popd
 
 # Install mandoc 1.14.6
-mkdir $MANDOC_DIR
-mv mandoc-1.14.6.tar.gz $MANDOC_DIR/mandoc-1.14.6.tar.gz
-pushd $MANDOC_DIR
+mkdir "$MANDOC_DIR"
+mv mandoc-1.14.6.tar.gz "$MANDOC_DIR/mandoc-1.14.6.tar.gz"
+pushd "$MANDOC_DIR"
 tar -zxvf mandoc-1.14.6.tar.gz
 cd mandoc-1.14.6
 make
@@ -97,7 +97,7 @@ make install
 popd
 
 # Install daemonize 1.7.8
-pushd $DAEMONIZE_DIR
+pushd "$DAEMONIZE_DIR"
 sh configure
 make
 make install
@@ -105,18 +105,18 @@ export PATH="$PATH:/usr/local/sbin"
 popd
 
 # Make and install rabbitmq
-pushd $RABBIT_MQ_DIR
+pushd "$RABBIT_MQ_DIR"
 make distclean
 make
 make install
 popd
 
 # Run tests using bazel
-pushd $RABBIT_MQ_DIR
+pushd "$RABBIT_MQ_DIR"
 bazel clean
 bazel test //... --test_env="LC_ALL=en_US.UTF-8"
 popd
 
 # Restore PATH to original state
 export PATH="$EXISTING_USER_PATH"
-rm $BAZEL_INSTALL_DIR/bazel
+rm "$BAZEL_INSTALL_DIR/bazel"
