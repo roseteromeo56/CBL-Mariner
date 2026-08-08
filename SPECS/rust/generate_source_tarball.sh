@@ -83,7 +83,7 @@ mkdir -p $temp_cache
 
 pushd $src_folder > /dev/null
 echo "Unpacking source tarball..."
-tar -xf $SRC_TARBALL
+tar -xf -- "$SRC_TARBALL"
 popd > /dev/null
 
 pushd $src_root > /dev/null
