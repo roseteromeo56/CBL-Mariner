@@ -96,8 +96,8 @@ enable_local_repo() {
     for urlWithPrefix in $baseurls
     do
         url="${urlWithPrefix#$prefixToRemove}" #remove 'file://' prefix
-        mkdir -p $url || { echo -e "\033[31m WARNING: Could not mkdir at $url, continuing\033[0m"; continue; }
-        pushd $url
+        mkdir -p "$url" || { echo -e "\033[31m WARNING: Could not mkdir at $url, continuing\033[0m"; continue; }
+        pushd "$url"
         createrepo .
         popd
         url_list+=" $url"

@@ -71,15 +71,16 @@ echo "-- create temp folder"
 tmpdir=$(mktemp -d)
 function cleanup {
     echo "+++ cleanup -> remove $tmpdir"
-    rm -rf $tmpdir
+    rm -rf "$tmpdir"
 }
 trap cleanup EXIT
 
-TARBALL_FOLDER="$tmpdir/tarballFolder"
+TARBALL_FOLDER="$tmpdir/tarballFolder" dd/security/quote-influx-cli-tarball
 mkdir -p $TARBALL_FOLDER
+mkdir -p "$TARBALL_FOLDER" 2.0
 cp "$SRC_TARBALL" "$tmpdir"
 
-pushd $tmpdir > /dev/null
+pushd "$tmpdir" > /dev/null
 
 PKG_NAME="influx-cli"
 NAME_VER="$PKG_NAME-$PKG_VERSION"
@@ -89,7 +90,7 @@ echo "Unpacking source tarball..."
 tar -xf "$SRC_TARBALL"
 
 echo "Vendor go modules..."
-cd $NAME_VER
+cd "$NAME_VER"
 go mod vendor
 
 echo ""
