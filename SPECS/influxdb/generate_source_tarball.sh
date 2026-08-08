@@ -21,8 +21,8 @@ PARAMS=""
 while (( "$#" )); do
     case "$1" in
         --srcTarball)
-        if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
-            SRC_TARBALL=$2
+        if [ -n "$2" ] && [ "${2:0:1}" != "-" ]; then
+            SRC_TARBALL="$2"
             shift 2
         else
             echo "Error: Argument for $1 is missing" >&2
@@ -30,8 +30,8 @@ while (( "$#" )); do
         fi
         ;;
         --outFolder)
-        if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
-            OUT_FOLDER=$2
+        if [ -n "$2" ] && [ "${2:0:1}" != "-" ]; then
+            OUT_FOLDER="$2"
             shift 2
         else
             echo "Error: Argument for $1 is missing" >&2
@@ -39,8 +39,8 @@ while (( "$#" )); do
         fi
         ;;
         --pkgVersion)
-        if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
-            PKG_VERSION=$2
+        if [ -n "$2" ] && [ "${2:0:1}" != "-" ]; then
+            PKG_VERSION="$2"
             shift 2
         else
             echo "Error: Argument for $1 is missing" >&2
@@ -71,25 +71,25 @@ echo "-- create temp folder"
 tmpdir=$(mktemp -d)
 function cleanup {
     echo "+++ cleanup -> remove $tmpdir"
-    rm -rf $tmpdir
+    rm -rf "$tmpdir"
 }
 trap cleanup EXIT
 
 TARBALL_FOLDER="$tmpdir/tarballFolder"
-mkdir -p $TARBALL_FOLDER
-cp $SRC_TARBALL $tmpdir
+mkdir -p "$TARBALL_FOLDER"
+cp "$SRC_TARBALL" "$tmpdir"
 
-pushd $tmpdir > /dev/null
+pushd "$tmpdir" > /dev/null
 
 PKG_NAME="influxdb"
 NAME_VER="$PKG_NAME-$PKG_VERSION"
 VENDOR_TARBALL="$OUT_FOLDER/$NAME_VER-vendor.tar.gz"
 
 echo "Unpacking source tarball..."
-tar -xf $SRC_TARBALL
+tar -xf "$SRC_TARBALL"
 
 echo "Vendor go modules..."
-cd $NAME_VER
+cd "$NAME_VER"
 go mod vendor
 
 echo ""
