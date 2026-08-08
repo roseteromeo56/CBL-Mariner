@@ -41,20 +41,20 @@ function download {
 # $1 = path to spec
 # $2 = changelog entry text
 function create_new_changelog_entry {
-    CHANGELOG_LINE=$(grep -n %changelog $1 | tail -1 | cut -f1 -d:)
+    CHANGELOG_LINE=$(grep -n %changelog "$1" | tail -1 | cut -f1 -d:)
     NEW_CHANGELOG_LINE=$((CHANGELOG_LINE+1))
     NEW_CHANGELOG_DATE=$(date +"%a %b %d %Y")
     NEW_CHANGELOG_HEADER="* $NEW_CHANGELOG_DATE $USER_NAME <$USER_EMAIL> - $VERSION-1"
     NEW_CHANGELOG_ENTRY="- Update source to $VERSION"
     FULL_CHANGELOG_ENTRY="$NEW_CHANGELOG_HEADER\n$NEW_CHANGELOG_ENTRY\n"
-    sed -i "${NEW_CHANGELOG_LINE}i${FULL_CHANGELOG_ENTRY}" $1
+    sed -i "${NEW_CHANGELOG_LINE}i${FULL_CHANGELOG_ENTRY}" "$1"
 }
 
 # $1 = TARGET_SPEC
 function update_spec {
-    sed -i "s/Version:.*/Version:        $VERSION/" $1
-    sed -i "s/Release:.*/$NEW_RELEASE_NUMBER/" $1
-    create_new_changelog_entry $1
+    sed -i "s/Version:.*/Version:        $VERSION/" "$1"
+    sed -i "s/Release:.*/$NEW_RELEASE_NUMBER/" "$1"
+    create_new_changelog_entry "$1"
 }
 
 function find_old_version {
@@ -85,10 +85,10 @@ function update_configs {
 
 # $1 = TARGET_SIGNATUREJSON
 function update_signature {
-    SPEC_DIR=$(dirname $1)
-    SHA256="$(sha256sum $SPEC_DIR/$TARBALL_NAME | awk '{print $1;}')"
+    SPEC_DIR=$(dirname -- "$1")
+    SHA256="$(sha256sum "$SPEC_DIR/$TARBALL_NAME" | awk '{print $1;}')"
     FULL_SIGNATURE_ENTRY="  \"$TARBALL_NAME\": \"$SHA256\""
-    sed -i "s/  \"$FILE_SIGNATURE_PATTERN.*\": \".*\"/$FULL_SIGNATURE_ENTRY/" $1
+    sed -i "s/  \"$FILE_SIGNATURE_PATTERN.*\": \".*\"/$FULL_SIGNATURE_ENTRY/" "$1"
 }
 
 function update_toolchain_md5sum {
@@ -259,13 +259,13 @@ do
     TARGET_SPEC=$WORKSPACE/SPECS/$spec/$spec.spec
     TARGET_SIGNATUREJSON=$WORKSPACE/SPECS/$spec/$spec.signatures.json
     copy_local_tarball "$TARGET_SPEC"
-    update_spec $TARGET_SPEC
-    update_signature $TARGET_SIGNATUREJSON
+    update_spec "$TARGET_SPEC"
+    update_signature "$TARGET_SIGNATUREJSON"
 done
 for spec in $SIGNED_SPECS
 do
     TARGET_SPEC=$WORKSPACE/SPECS-SIGNED/$spec/$spec.spec
-    update_spec $TARGET_SPEC
+    update_spec "$TARGET_SPEC"
 done
 update_configs
 
