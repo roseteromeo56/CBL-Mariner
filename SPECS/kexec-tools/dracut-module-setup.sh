@@ -245,7 +245,7 @@ kdump_setup_bond() {
         echo -n " ifname=$_kdumpdev:$_mac" >> ${initdir}/etc/cmdline.d/42bond.conf
         _slaves+="$_kdumpdev,"
     done
-    echo -n " bond=$_netdev:$(echo $_slaves | sed 's/,$//')" >> ${initdir}/etc/cmdline.d/42bond.conf
+    echo -n " bond=$_netdev:${_slaves%,}" >> "${initdir}/etc/cmdline.d/42bond.conf"
     # Get bond options specified in ifcfg
 
     source_ifcfg_file $_netdev
