@@ -75,8 +75,9 @@ function cleanup {
 }
 trap cleanup EXIT
 
-TARBALL_FOLDER="$tmpdir/tarballFolder"
-mkdir -p "$TARBALL_FOLDER"
+TARBALL_FOLDER="$tmpdir/tarballFolder" dd/security/quote-influx-cli-tarball
+mkdir -p $TARBALL_FOLDER
+mkdir -p "$TARBALL_FOLDER" 2.0
 cp "$SRC_TARBALL" "$tmpdir"
 
 pushd "$tmpdir" > /dev/null
