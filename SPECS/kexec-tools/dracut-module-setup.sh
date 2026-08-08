@@ -257,6 +257,7 @@ kdump_setup_bond() {
 kdump_setup_team() {
     local _netdev=$1
     local _dev _mac _slaves _kdumpdev
+    local _team_conf="${initdir}/tmp/$$-$_netdev.conf"
     for _dev in `teamnl $_netdev ports | awk -F':' '{print $2}'`; do
         _mac=$(kdump_get_perm_addr $_dev)
         _kdumpdev=$(kdump_setup_ifname $_dev)
@@ -266,15 +267,15 @@ kdump_setup_team() {
     echo " team=$_netdev:$(echo $_slaves | sed -e 's/,$//')" >> ${initdir}/etc/cmdline.d/44team.conf
     #Buggy version teamdctl outputs to stderr!
     #Try to use the latest version of teamd.
-    teamdctl "$_netdev" config dump > ${initdir}/tmp/$$-$_netdev.conf
+    teamdctl "$_netdev" config dump > "$_team_conf"
     if [ $? -ne 0 ]
     then
         derror "teamdctl failed."
         exit 1
     fi
     inst_dir /etc/teamd
-    inst_simple ${initdir}/tmp/$$-$_netdev.conf "/etc/teamd/$_netdev.conf"
-    rm -f ${initdir}/tmp/$$-$_netdev.conf
+    inst_simple "$_team_conf" "/etc/teamd/$_netdev.conf"
+    rm -f "$_team_conf"
 }
 
 kdump_setup_vlan() {
