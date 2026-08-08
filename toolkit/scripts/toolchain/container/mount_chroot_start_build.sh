@@ -6,23 +6,23 @@ if [[ -z "$LFS" ]]; then
     echo "Must define LFS in environment" 1>&2
     exit 1
 fi
-echo LFS root is: $LFS
+echo "LFS root is: $LFS"
 
 # Change temp tools to root ownership
-chown -R root:root $LFS/tools
+chown -R root:root "$LFS/tools"
 
-mkdir -pv $LFS/{dev,proc,sys,run}
-mknod -m 600 $LFS/dev/console c 5 1
-mknod -m 666 $LFS/dev/null c 1 3
-mount -v --bind /dev $LFS/dev
-mount -vt devpts devpts $LFS/dev/pts -o gid=5,mode=620
-mount -vt proc proc $LFS/proc
-mount -vt sysfs sysfs $LFS/sys
-mount -vt tmpfs tmpfs $LFS/run
+mkdir -pv "$LFS"/{dev,proc,sys,run}
+mknod -m 600 "$LFS/dev/console" c 5 1
+mknod -m 666 "$LFS/dev/null" c 1 3
+mount -v --bind /dev "$LFS/dev"
+mount -vt devpts devpts "$LFS/dev/pts" -o gid=5,mode=620
+mount -vt proc proc "$LFS/proc"
+mount -vt sysfs sysfs "$LFS/sys"
+mount -vt tmpfs tmpfs "$LFS/run"
 
 # Fix /dev/shm
-if [ -h $LFS/dev/shm ]; then
-  mkdir -pv $LFS/$(readlink $LFS/dev/shm)
+if [ -h "$LFS/dev/shm" ]; then
+  mkdir -pv "$LFS/$(readlink "$LFS/dev/shm")"
 fi
 
 echo Root folder before entering chroot
