@@ -22,7 +22,7 @@ Distribution:   Mariner
 %define __requires_exclude system.bundle
 Name:           xerces-j2
 Version:        2.12.0
-Release:        5%{?dist}
+Release:        6%{?dist}
 Summary:        Java XML parser
 License:        ASL 2.0 and Public Domain and W3C
 Group:          Development/Libraries/Java
@@ -173,6 +173,9 @@ ln -sf %{name}.jar %{_javadir}/jaxp_parser_impl.jar
 %{_datadir}/%{name}
 
 %changelog
+* Sat Aug 08 2026 Datadog Bits Dev <bits-dev@datadoghq.com> - 2.12.0-6
+- Quote variable expansions in the constants launcher script.
+
 * Thu Oct 14 2021 Pawel Winogrodzki <pawelwi@microsoft.com> - 2.12.0-5
 - Converting the 'Release' tag to the '[number].[distribution]' format.
 - License verified.

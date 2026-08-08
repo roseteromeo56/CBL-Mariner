@@ -12,9 +12,9 @@ MAIN_CLASS=org.apache.xerces.impl.Constants
 
 # Set parameters
 set_jvm
-export CLASSPATH=$(build-classpath xerces-j2)
-set_flags $BASE_FLAGS
-set_options $BASE_OPTIONS
+export CLASSPATH="$(build-classpath xerces-j2)"
+set_flags "${BASE_FLAGS:-}"
+set_options "${BASE_OPTIONS:-}"
 
 # Let's start
 run "$@"
