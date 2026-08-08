@@ -233,7 +233,7 @@ kdump_setup_bridge() {
         fi
         _brif+="$_kdumpdev,"
     done
-    echo " bridge=$_netdev:$(echo $_brif | sed -e 's/,$//')" >> ${initdir}/etc/cmdline.d/41bridge.conf
+    echo " bridge=$_netdev:${_brif%,}" >> "${initdir}/etc/cmdline.d/41bridge.conf"
 }
 
 kdump_setup_bond() {
