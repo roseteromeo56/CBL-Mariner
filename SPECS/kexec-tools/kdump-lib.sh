@@ -465,7 +465,7 @@ is_wdt_mod_omitted() {
 	local ret=1
 
 	dracut_args=$(grep  "^dracut_args" /etc/kdump.conf)
-	[[ -z $dracut_args ]] && return $ret
+	[[ -z "$dracut_args" ]] && return "$ret"
 
 	eval set -- $dracut_args
 	while :; do
