@@ -21,8 +21,8 @@ PARAMS=""
 while (( "$#" )); do
     case "$1" in
         --srcTarball)
-        if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
-            SRC_TARBALL=$2
+        if [ -n "$2" ] && [ "${2:0:1}" != "-" ]; then
+            SRC_TARBALL="$2"
             shift 2
         else
             echo "Error: Argument for $1 is missing" >&2
@@ -30,8 +30,8 @@ while (( "$#" )); do
         fi
         ;;
         --outFolder)
-        if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
-            OUT_FOLDER=$2
+        if [ -n "$2" ] && [ "${2:0:1}" != "-" ]; then
+            OUT_FOLDER="$2"
             shift 2
         else
             echo "Error: Argument for $1 is missing" >&2
@@ -39,8 +39,8 @@ while (( "$#" )); do
         fi
         ;;
         --pkgVersion)
-        if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
-            PKG_VERSION=$2
+        if [ -n "$2" ] && [ "${2:0:1}" != "-" ]; then
+            PKG_VERSION="$2"
             shift 2
         else
             echo "Error: Argument for $1 is missing" >&2
@@ -74,10 +74,12 @@ function cleanup {
     rm -rf "$tmpdir"
 }
 trap cleanup EXIT
-
+ dd/fix/influx-cli-quote-vars-tarball
+TARBALL_FOLDER="$tmpdir/tarballFolder"
+mkdir -p "$TARBALL_FOLDER"
 TARBALL_FOLDER="$tmpdir/tarballFolder" dd/security/quote-influx-cli-tarball
 mkdir -p $TARBALL_FOLDER
-mkdir -p "$TARBALL_FOLDER" 2.0
+mkdir -p "$TARBALL_FOLDER" 2.0 2.0
 cp "$SRC_TARBALL" "$tmpdir"
 
 pushd "$tmpdir" > /dev/null
