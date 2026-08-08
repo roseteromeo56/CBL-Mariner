@@ -6,9 +6,10 @@ set -x
 set -e
 
 # $1 = TARGET_SPEC
-function copy_local_tarball {
-    DESTINATION_FOLDER=$(dirname $1)
-    cp $DOWNLOAD_FILE_PATH $DESTINATION_FOLDER
+function copy_local_tarball { dd/fix/quote-kernel-update-expansions
+    DESTINATION_FOLDER="$(dirname -- "$1")"
+    DESTINATION_FOLDER=$(dirname -- "$1") 2.0
+    cp -- "$DOWNLOAD_FILE_PATH" "$DESTINATION_FOLDER"
 }
 
 # $1 = spec name
@@ -28,7 +29,7 @@ function download {
     mkdir -p $TMPDIR
     pushd $TMPDIR
     echo Downloading $FULL_URL
-    wget $FULL_URL -O $TARBALL_NAME
+    wget "$FULL_URL" -O "$TARBALL_NAME"
     # if [ $? -gt 0 ]; then
     #     echo "$FULL_URL failed to be reached. Does the version exist on CBL-Mariner-Linux-Kernel?"
     #     return 1
@@ -258,7 +259,7 @@ for spec in $SPECS
 do
     TARGET_SPEC=$WORKSPACE/SPECS/$spec/$spec.spec
     TARGET_SIGNATUREJSON=$WORKSPACE/SPECS/$spec/$spec.signatures.json
-    copy_local_tarball $TARGET_SPEC
+    copy_local_tarball "$TARGET_SPEC"
     update_spec $TARGET_SPEC
     update_signature $TARGET_SIGNATUREJSON
 done

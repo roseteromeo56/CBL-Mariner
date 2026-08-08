@@ -30,7 +30,7 @@ hydrate_artifacts() {
     local repo_dir
     local rpms_archive
     local rpms_input
-    local rpms_dir
+    local rpms_dir=()
     local srpms_archive
     local srpms_input
     local toolchain_archive
@@ -41,7 +41,7 @@ hydrate_artifacts() {
     while getopts "cd:r:s:t:" OPTIONS
     do
         case "${OPTIONS}" in
-            c ) rpms_dir="RPMS_DIR=../build/rpms_cache/cache" ;;
+            c ) rpms_dir=("RPMS_DIR=../build/rpms_cache/cache") ;;
             d ) repo_dir="$OPTARG" ;;
             r ) rpms_input="$OPTARG" ;;
             s ) srpms_input="$OPTARG" ;;
@@ -102,7 +102,7 @@ hydrate_artifacts() {
     then
         echo "-- Hydrating cache of repo '$repo_dir' with RPMs from '$rpms_archive'."
 
-        sudo make -C "$toolkit_dir" -j"$(nproc)" hydrate-rpms PACKAGE_ARCHIVE="$rpms_archive" $rpms_dir
+        sudo make -C "$toolkit_dir" -j"$(nproc)" hydrate-rpms PACKAGE_ARCHIVE="$rpms_archive" "${rpms_dir[@]}"
         exit_code=$?
         if [[ $exit_code != 0 ]]; then
             echo "ERROR: failed to hydrate repo's RPMs." >&2
