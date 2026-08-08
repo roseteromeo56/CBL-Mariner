@@ -21,8 +21,8 @@ PARAMS=""
 while (( "$#" )); do
     case "$1" in
         --srcTarball)
-        if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
-            SRC_TARBALL=$2
+        if [ -n "$2" ] && [ "${2:0:1}" != "-" ]; then
+            SRC_TARBALL="$2"
             shift 2
         else
             echo "Error: Argument for $1 is missing" >&2
@@ -30,8 +30,8 @@ while (( "$#" )); do
         fi
         ;;
         --outFolder)
-        if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
-            OUT_FOLDER=$2
+        if [ -n "$2" ] && [ "${2:0:1}" != "-" ]; then
+            OUT_FOLDER="$2"
             shift 2
         else
             echo "Error: Argument for $1 is missing" >&2
@@ -39,8 +39,8 @@ while (( "$#" )); do
         fi
         ;;
         --pkgVersion)
-        if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
-            PKG_VERSION=$2
+        if [ -n "$2" ] && [ "${2:0:1}" != "-" ]; then
+            PKG_VERSION="$2"
             shift 2
         else
             echo "Error: Argument for $1 is missing" >&2
@@ -84,9 +84,12 @@ pushd "$tmpdir" > /dev/null
 PKG_NAME="influxdb"
 NAME_VER="$PKG_NAME-$PKG_VERSION"
 VENDOR_TARBALL="$OUT_FOLDER/$NAME_VER-vendor.tar.gz"
-
+ dd/fix/influxdb-quote-var-expansions-S9xXRl
 echo "Unpacking source tarball..."
 tar -xf "$SRC_TARBALL"
+echo "Unpacking source tarball..." dd/fix/influxdb-quote-tarball-arg
+tar -xf -- "$SRC_TARBALL"
+tar -xf "$SRC_TARBALL" 2.0 2.0
 
 echo "Vendor go modules..."
 cd "$NAME_VER"
