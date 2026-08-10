@@ -128,7 +128,7 @@ cd "${script_dir}"  || { echo "ERROR: Could not change directory to ${script_dir
 # ==================== Setup ====================
 
 # Get Mariner GitHub branch at $repo_path
-repo_branch=$(git -C ${repo_path} rev-parse --abbrev-ref HEAD)
+repo_branch=$(git -C "${repo_path}" rev-parse --abbrev-ref HEAD)
 
 # Generate text based on mode (Use figlet to generate splash text once available on Mariner)
 if [[ "${mode}" == "build" ]]; then
