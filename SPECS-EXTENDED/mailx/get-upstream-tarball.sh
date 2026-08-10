@@ -13,8 +13,8 @@
 
 newdir=new-upstream-tarball
 
-mkdir $newdir
-cd $newdir
+mkdir "$newdir"
+cd "$newdir"
 
 # checkout cvs
 echo "== Just press Enter =="
@@ -27,8 +27,7 @@ rm -rf nail/CVS nail/catd/CVS
 # find version in nail/version.c file defined as: #define V "xxx"
 ver=$(sed -rn 's/#define\s+V\s+\"([0-9.]+)\"/\1/p' nail/version.c)
 
-mv nail mailx-$ver
-tar cJf mailx-$ver.tar.xz mailx-$ver
+mv nail "mailx-$ver"
+tar cJf "mailx-$ver.tar.xz" "mailx-$ver"
 
-rm -rf mailx-$ver
-
+rm -rf "mailx-$ver"
