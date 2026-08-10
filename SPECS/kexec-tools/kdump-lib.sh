@@ -241,47 +241,47 @@ get_target_from_path()
 {
     local _target
 
-    _target=$(df $1 2>/dev/null | tail -1 |  awk '{print $1}')
+    _target=$(df "$1" 2>/dev/null | tail -1 |  awk '{print $1}')
     [[ "$_target" == "/dev/root" ]] && [[ ! -e /dev/root ]] && _target=$(get_root_fs_device)
-    echo $_target
+    echo "$_target"
 }
 
 is_mounted()
 {
-    findmnt -k -n $1 &>/dev/null
+    findmnt -k -n "$1" &>/dev/null
 }
 
 get_mount_info()
 {
     local _info_type=$1 _src_type=$2 _src=$3; shift 3
-    local _info=$(findmnt --real -k -n -r -o $_info_type --$_src_type $_src $@)
+    local _info=$(findmnt --real -k -n -r -o "$_info_type" "--$_src_type" "$_src" "$@")
 
-    [ -z "$_info" ] && [ -e "/etc/fstab" ] && _info=$(findmnt --real -s -n -r -o $_info_type --$_src_type $_src $@)
+    [ -z "$_info" ] && [ -e "/etc/fstab" ] && _info=$(findmnt --real -s -n -r -o "$_info_type" "--$_src_type" "$_src" "$@")
 
-    echo $_info
+    echo "$_info"
 }
 
 get_fs_type_from_target()
 {
-    get_mount_info FSTYPE source $1 -f
+    get_mount_info FSTYPE source "$1" -f
 }
 
 get_mntopt_from_target()
 {
-    get_mount_info OPTIONS source $1 -f
+    get_mount_info OPTIONS source "$1" -f
 }
 # Find the general mount point of a dump target, not the bind mount point
 get_mntpoint_from_target()
 {
     # Expcilitly specify --source to findmnt could ensure non-bind mount is returned
-    get_mount_info TARGET source $1 -f
+    get_mount_info TARGET source "$1" -f
 }
 
 # Get the path where the target will be mounted in kdump kernel
 # $1: kdump target device
 get_kdump_mntpoint_from_target()
 {
-    local _mntpoint=$(get_mntpoint_from_target $1)
+    local _mntpoint=$(get_mntpoint_from_target "$1")
 
     # mount under /sysroot if dump to root disk or mount under
     # mount under /kdumproot if dump target is not mounted in first kernel
@@ -298,7 +298,7 @@ get_kdump_mntpoint_from_target()
     fi
 
     # strip duplicated "/"
-    echo $_mntpoint | tr -s "/"
+    echo "$_mntpoint" | tr -s "/"
 }
 
 # get_option_value <option_name>
