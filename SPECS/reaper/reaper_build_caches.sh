@@ -158,6 +158,6 @@ createCacheTars
 
 mkdir "$HOME/reaper_caches"
 
-cp -a ${reaperCacheDir} "$HOME/reaper_caches"
+cp -a "${reaperCacheDir}" "$HOME/reaper_caches"
 
 echo "Copied cache tars to $HOME/reaper_caches/ .Exiting."
