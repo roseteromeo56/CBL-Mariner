@@ -105,7 +105,7 @@ kdump_setup_dns() {
 #if it use static ip echo it, or echo null
 kdump_static_ip() {
     local _netdev="$1" _srcaddr="$2" _ipv6_flag
-    local _netmask _gateway _ipaddr _target _nexthop
+    local _netmask _gateway _ipaddr _target _nexthop _route
 
     _ipaddr=$(ip addr show dev $_netdev permanent | awk "/ $_srcaddr\/.* /{print \$2}")
 
@@ -130,9 +130,8 @@ kdump_static_ip() {
 
     /sbin/ip $_ipv6_flag route show | grep -v default |\
     grep ".*via.* $_netdev " | grep -v "^[[:space:]]*nexthop" |\
-    while read _route; do
-        _target=`echo $_route | cut -d ' ' -f1`
-        _nexthop=`echo $_route | cut -d ' ' -f3`
+    while IFS= read -r _route; do
+        read -r _target _ _nexthop _ <<< "$_route"
         if [ "x" !=  "x"$_ipv6_flag ]; then
             _target="[$_target]"
             _nexthop="[$_nexthop]"
