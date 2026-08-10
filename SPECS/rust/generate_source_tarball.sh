@@ -83,7 +83,7 @@ mkdir -p $temp_cache
 
 pushd $src_folder > /dev/null
 echo "Unpacking source tarball..."
-tar -xf $SRC_TARBALL
+tar -xf -- "$SRC_TARBALL"
 popd > /dev/null
 
 pushd $src_root > /dev/null
@@ -102,8 +102,8 @@ popd > /dev/null
 pushd $OUT_FOLDER > /dev/null
 echo "get additional src tarballs"
 CONFIG_FILE="$src_root/src/stage0.json"
-RUST_RELEASE_DATE=$(cat $CONFIG_FILE | jq -r '.compiler.date')
-RUST_STAGE0_VERSION=$(cat $CONFIG_FILE | jq -r '.compiler.version')
+RUST_RELEASE_DATE=$(jq -r '.compiler.date' "$CONFIG_FILE")
+RUST_STAGE0_VERSION=$(jq -r '.compiler.version' "$CONFIG_FILE")
 wget https://static.rust-lang.org/dist/$RUST_RELEASE_DATE/cargo-$RUST_STAGE0_VERSION-x86_64-unknown-linux-gnu.tar.xz
 wget https://static.rust-lang.org/dist/$RUST_RELEASE_DATE/rustc-$RUST_STAGE0_VERSION-x86_64-unknown-linux-gnu.tar.xz
 wget https://static.rust-lang.org/dist/$RUST_RELEASE_DATE/rust-std-$RUST_STAGE0_VERSION-x86_64-unknown-linux-gnu.tar.xz

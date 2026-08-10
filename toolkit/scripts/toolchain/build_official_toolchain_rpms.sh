@@ -22,7 +22,7 @@ MARINER_TOOLCHAIN_MANIFESTS_FILE=${12}
 # =====================================================
 BLDTRACKER=${13}
 TIMESTAMP_FILE_PATH=${14}
-source $(dirname  $0)/../timestamp.sh
+source "$(dirname "$0")/../timestamp.sh"
 # =====================================================
 
 begin_timestamp
@@ -68,7 +68,7 @@ fi
 # The build/toolchain/populated_toolchain folder might exist, but not have the unpacked
 # chroot environment inside it. So, we need to check if some expected directory exists
 # within $LFS.
-pushd $MARINER_BUILD_DIR/toolchain
+pushd "$MARINER_BUILD_DIR/toolchain"
 if [[ ! -d "$LFS/usr" ]]
 then
     echo "$LFS not populated with chroot environment yet, unpacking tarball"
@@ -76,15 +76,15 @@ then
 fi
 popd
 
-mkdir -pv $FINISHED_RPM_DIR
-mkdir -pv $CHROOT_SPECS_DIR
-mkdir -pv $CHROOT_SRPMS_DIR
-mkdir -pv $CHROOT_SOURCES_DIR
-mkdir -pv $CHROOT_INSTALL_RPM_DIR
-mkdir -pv $TOOLCHAIN_LOGS
-mkdir -pv $CHROOT_RPMS_DIR
-mkdir -pv $CHROOT_RPMS_DIR_ARCH
-mkdir -pv $CHROOT_RPMS_DIR_NOARCH
+mkdir -pv "$FINISHED_RPM_DIR"
+mkdir -pv "$CHROOT_SPECS_DIR"
+mkdir -pv "$CHROOT_SRPMS_DIR"
+mkdir -pv "$CHROOT_SOURCES_DIR"
+mkdir -pv "$CHROOT_INSTALL_RPM_DIR"
+mkdir -pv "$TOOLCHAIN_LOGS"
+mkdir -pv "$CHROOT_RPMS_DIR"
+mkdir -pv "$CHROOT_RPMS_DIR_ARCH"
+mkdir -pv "$CHROOT_RPMS_DIR_NOARCH"
 
 TEMP_DIR=$(mktemp -d -t)
 TEMP_BUILT_RPMS_LIST="$(mktemp --tmpdir="$TEMP_DIR")"
@@ -102,10 +102,10 @@ function clean_up {
 trap clean_up EXIT
 
 # Remove artifacts from previous toolchain builds
-sudo rm -f $TOOLCHAIN_BUILD_LIST
-sudo rm -f $TOOLCHAIN_FAILURES
-sudo rm -rf $CHROOT_BUILDROOT_DIR
-touch $TOOLCHAIN_FAILURES
+sudo rm -f "$TOOLCHAIN_BUILD_LIST"
+sudo rm -f "$TOOLCHAIN_FAILURES"
+sudo rm -rf "$CHROOT_BUILDROOT_DIR"
+touch "$TOOLCHAIN_FAILURES"
 
 stop_record_timestamp "prep_files"
 start_record_timestamp "hydrate"

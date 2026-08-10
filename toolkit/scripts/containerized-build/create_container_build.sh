@@ -198,12 +198,12 @@ for mount in $mounts $extra_mounts; do
 done
 
 # Copy resources into container
-cp resources/welcome.txt $tmp_dir
-sed -i "s~<REPO_PATH>~${repo_path}~" $tmp_dir/welcome.txt
-sed -i "s~<REPO_BRANCH>~${repo_branch}~" $tmp_dir/welcome.txt
-sed -i "s~<AARCH>~$(uname -m)~" $tmp_dir/welcome.txt
-cp resources/setup_functions.sh $tmp_dir/setup_functions.sh
-sed -i "s~<TOPDIR>~${topdir}~" $tmp_dir/setup_functions.sh
+cp resources/welcome.txt "${tmp_dir}"
+sed -i "s~<REPO_PATH>~${repo_path}~" "${tmp_dir}/welcome.txt"
+sed -i "s~<REPO_BRANCH>~${repo_branch}~" "${tmp_dir}/welcome.txt"
+sed -i "s~<AARCH>~$(uname -m)~" "${tmp_dir}/welcome.txt"
+cp resources/setup_functions.sh "${tmp_dir}/setup_functions.sh"
+sed -i "s~<TOPDIR>~${topdir}~" "${tmp_dir}/setup_functions.sh"
 
 # ============ Build the image ============
 dockerfile="${script_dir}/resources/mariner.Dockerfile"

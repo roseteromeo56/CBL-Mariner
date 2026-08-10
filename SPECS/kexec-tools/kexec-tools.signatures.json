@@ -8,8 +8,9 @@
   "dracut-kdump-emergency.target": "75d3637d8829009015f9ac0b6b2b93b260f6700f3bf930155080906b696d4720",
   "dracut-kdump-error-handler.service": "d5cd3a6cce04955a07ae5cd7790ae17365b90a4989f1888d7b7f487316a1544d",
   "dracut-kdump-error-handler.sh": "23bb509940a9ecc3944bb88526b974f49cfb7d6c133fe11615d8d4604141e4c9",
-  "dracut-kdump.sh": "0aef51b237b0d1fb7eed6a5eea2fd1d81d251d6ecb084a57b5070224cab0315c",
-  "dracut-module-setup.sh": "b7f8a4a573e5a424591825f25ea91ab8a995cd8f8d0c28e2b549a3dae83cb627",
+  "dracut-kdump.sh": "0aef51b237b0d1fb7eed6a5eea2fd1d81d251d6ecb084a57b5070224cab0315c" dd/automation/fix/kexec-static-route-quoting-20260808
+  "dracut-module-setup.sh": "48c8fb8f493ee8fc1c37282e91a292343425a3bd6dc29fa0d56cdf0b32e38007",
+  "dracut-module-setup.sh": "1c1f2e4ecdcd44beb07ea6adfadfbba7a420e202be950bb71e8e9de98cf0165b", 2.0
   "dracut-monitor_dd_progress": "2e343a54c032f6af0d5f7b5fb49f2d90057b2a234625fe7ee6c1afb21cb5c435",
   "early-kdump-howto.txt": "984d51f3d9e7f2f858ef153418190c470bf20ee702c97fe34285c6d05078999c",
   "eppic-e8844d3.tar.gz": "5bf3fce09fc880a96cbc0cbb3eadcae1892d7fd43350a585f150b1cce176b128",

@@ -84,9 +84,12 @@ pushd "$tmpdir" > /dev/null
 PKG_NAME="influxdb"
 NAME_VER="$PKG_NAME-$PKG_VERSION"
 VENDOR_TARBALL="$OUT_FOLDER/$NAME_VER-vendor.tar.gz"
-
+ dd/fix/influxdb-quote-var-expansions-S9xXRl
 echo "Unpacking source tarball..."
 tar -xf "$SRC_TARBALL"
+echo "Unpacking source tarball..." dd/fix/influxdb-quote-tarball-arg
+tar -xf -- "$SRC_TARBALL"
+tar -xf "$SRC_TARBALL" 2.0 2.0
 
 echo "Vendor go modules..."
 cd "$NAME_VER"
