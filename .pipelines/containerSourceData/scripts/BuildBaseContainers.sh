@@ -345,15 +345,15 @@ function save_container_image {
 function build_images {
     echo "+++ Build images"
 
-    docker_build $BASE "$BASE_IMAGE_NAME" "$BASE_TARBALL" "Dockerfile-Base-Template"
-    docker_build $DISTROLESS "$DISTROLESS_BASE_IMAGE_NAME" "$DISTROLESS_BASE_TARBALL" "Dockerfile-Distroless-Template"
-    docker_build $DISTROLESS "$DISTROLESS_MINIMAL_IMAGE_NAME" "$DISTROLESS_MINIMAL_TARBALL" "Dockerfile-Distroless-Template"
-    docker_build $DISTROLESS "$DISTROLESS_DEBUG_IMAGE_NAME" "$DISTROLESS_DEBUG_TARBALL" "Dockerfile-Distroless-Template"
+    docker_build "$BASE" "$BASE_IMAGE_NAME" "$BASE_TARBALL" "Dockerfile-Base-Template"
+    docker_build "$DISTROLESS" "$DISTROLESS_BASE_IMAGE_NAME" "$DISTROLESS_BASE_TARBALL" "Dockerfile-Distroless-Template"
+    docker_build "$DISTROLESS" "$DISTROLESS_MINIMAL_IMAGE_NAME" "$DISTROLESS_MINIMAL_TARBALL" "Dockerfile-Distroless-Template"
+    docker_build "$DISTROLESS" "$DISTROLESS_DEBUG_IMAGE_NAME" "$DISTROLESS_DEBUG_TARBALL" "Dockerfile-Distroless-Template"
 
-    docker_build_custom $BASE "$BASE_NONROOT_IMAGE_NAME" "" "Dockerfile-Base-Nonroot-Template"
-    docker_build_custom $DISTROLESS "$DISTROLESS_BASE_NONROOT_IMAGE_NAME" "$DISTROLESS_BASE_IMAGE_NAME" "Dockerfile-Distroless-Nonroot-Template"
-    docker_build_custom $DISTROLESS "$DISTROLESS_MINIMAL_NONROOT_IMAGE_NAME" "$DISTROLESS_MINIMAL_IMAGE_NAME" "Dockerfile-Distroless-Nonroot-Template"
-    docker_build_custom $DISTROLESS "$DISTROLESS_DEBUG_NONROOT_IMAGE_NAME" "$DISTROLESS_DEBUG_IMAGE_NAME" "Dockerfile-Distroless-Nonroot-Template"
+    docker_build_custom "$BASE" "$BASE_NONROOT_IMAGE_NAME" "" "Dockerfile-Base-Nonroot-Template"
+    docker_build_custom "$DISTROLESS" "$DISTROLESS_BASE_NONROOT_IMAGE_NAME" "$DISTROLESS_BASE_IMAGE_NAME" "Dockerfile-Distroless-Nonroot-Template"
+    docker_build_custom "$DISTROLESS" "$DISTROLESS_MINIMAL_NONROOT_IMAGE_NAME" "$DISTROLESS_MINIMAL_IMAGE_NAME" "Dockerfile-Distroless-Nonroot-Template"
+    docker_build_custom "$DISTROLESS" "$DISTROLESS_DEBUG_NONROOT_IMAGE_NAME" "$DISTROLESS_DEBUG_IMAGE_NAME" "Dockerfile-Distroless-Nonroot-Template"
 
     docker_build_marinara
 }

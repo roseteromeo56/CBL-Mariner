@@ -6,8 +6,9 @@ set -x
 set -e
 
 # $1 = TARGET_SPEC
-function copy_local_tarball {
-    DESTINATION_FOLDER=$(dirname -- "$1")
+function copy_local_tarball { dd/fix/quote-kernel-update-expansions
+    DESTINATION_FOLDER="$(dirname -- "$1")"
+    DESTINATION_FOLDER=$(dirname -- "$1") 2.0
     cp -- "$DOWNLOAD_FILE_PATH" "$DESTINATION_FOLDER"
 }
 
