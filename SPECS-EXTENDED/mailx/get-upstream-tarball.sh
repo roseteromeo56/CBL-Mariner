@@ -25,7 +25,11 @@ cvs -d:pserver:anonymous@nail.cvs.sourceforge.net:/cvsroot/nail co nail
 rm -rf nail/CVS nail/catd/CVS
 
 # find version in nail/version.c file defined as: #define V "xxx"
-ver=$(sed -rn 's/#define\s+V\s+\"([0-9.]+)\"/\1/p' nail/version.c)
+ver=$(sed -rn 's/^#define[[:space:]]+V[[:space:]]+"([0-9]+([.][0-9]+)*)"[[:space:]]*$/\1/p' nail/version.c)
+if [ -z "$ver" ] || [ "$(printf '%s\n' "$ver" | wc -l)" -ne 1 ]; then
+    echo "Unable to determine mailx version from nail/version.c" >&2
+    exit 1
+fi
 
 mv nail "mailx-$ver"
 tar cJf "mailx-$ver.tar.xz" "mailx-$ver"
