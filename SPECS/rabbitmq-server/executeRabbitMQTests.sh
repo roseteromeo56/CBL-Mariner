@@ -66,8 +66,9 @@ echo ""
 echo ""
 
 
-# Remove existing/old test directories
-rm -rf "$BAZEL_DIR" "$MANDOC_DIR" "$DAEMONIZE_DIR"
+# Remove existing/old test directories dd/automation/sast/quote-rabbitmq-test-paths-3d565d87
+rm -rf -- "$BAZEL_DIR" "$MANDOC_DIR" "$DAEMONIZE_DIR"
+rm -rf "$BAZEL_DIR" "$MANDOC_DIR" "$DAEMONIZE_DIR" 2.0
 
 # Required dependencies are installed
 dnf install msopenjdk-11 wget git build-essential python3 zip unzip
