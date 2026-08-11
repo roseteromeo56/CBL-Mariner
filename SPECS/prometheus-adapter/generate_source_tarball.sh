@@ -23,7 +23,7 @@ PARAMS=""
 while (( "$#" )); do
     case "$1" in
         --srcTarball)
-        if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
+        if [ -n "$2" ] && [ "${2:0:1}" != "-" ]; then
             SRC_TARBALL=$2
             shift 2
         else
@@ -32,7 +32,7 @@ while (( "$#" )); do
         fi
         ;;
         --outFolder)
-        if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
+        if [ -n "$2" ] && [ "${2:0:1}" != "-" ]; then
             OUT_FOLDER=$2
             shift 2
         else
@@ -41,7 +41,7 @@ while (( "$#" )); do
         fi
         ;;
         --pkgVersion)
-        if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
+        if [ -n "$2" ] && [ "${2:0:1}" != "-" ]; then
             PKG_VERSION=$2
             shift 2
         else
@@ -73,7 +73,7 @@ echo "-- create temp folder"
 TEMPDIR=$(mktemp -d)
 function cleanup {
     echo "+++ cleanup -> remove $TEMPDIR"
-    rm -rf $TEMPDIR
+    rm -rf "$TEMPDIR"
 }
 trap cleanup EXIT
 
@@ -82,7 +82,7 @@ ADAPTER_URL="https://github.com/kubernetes-sigs/prometheus-adapter/archive/refs/
 
 cd "$TEMPDIR"
 # sudo chown -R "$USER": .
-wget -c $ADAPTER_URL -O "prometheus-adapter-$PKG_VERSION.tar.gz"
+wget -c "$ADAPTER_URL" -O "prometheus-adapter-$PKG_VERSION.tar.gz"
 tar -xzf "prometheus-adapter-$PKG_VERSION.tar.gz"
 cd "prometheus-adapter-$PKG_VERSION"
 go mod vendor

@@ -39,9 +39,9 @@ rpm() {
             fi
         done
     fi
-    rm -f $SPECS_DIR/*.spec
-    rm -f $SOURCES_DIR/*.spec
-    rm -f $SOURCES_DIR/*.signatures.json
+    rm -f "$SPECS_DIR"/*.spec
+    rm -f "$SOURCES_DIR"/*.spec
+    rm -f "$SOURCES_DIR"/*.signatures.json
 }
 
 # Installs srpm, pkg dependencies and builds pkg

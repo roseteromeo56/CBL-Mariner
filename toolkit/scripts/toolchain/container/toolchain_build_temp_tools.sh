@@ -8,10 +8,10 @@ if [[ -z "$LFS" ]]; then
     echo "Must define LFS in environment" 1>&2
     exit 1
 fi
-echo LFS root is: $LFS
-cd $LFS/sources
+echo "LFS root is: $LFS"
+cd "$LFS/sources"
 
-touch $LFS/logs/temptoolchain/status_temp_toolchain_build_started
+touch "$LFS/logs/temptoolchain/status_temp_toolchain_build_started"
 
 cat /home/lfs/.bashrc
 LFS_TGT=$(uname -m)-lfs-linux-gnu
@@ -23,9 +23,9 @@ patch -p1 -i /tools/linker-script-readonly-keyword-support.patch
 mkdir -v build
 cd build
 ../configure --prefix=/tools \
-    --with-sysroot=$LFS \
+    --with-sysroot="$LFS" \
     --with-lib-path=/tools/lib \
-    --target=$LFS_TGT \
+    --target="$LFS_TGT" \
     --disable-nls \
     --disable-werror
 make -j$(nproc)
@@ -34,7 +34,7 @@ make install
 popd
 rm -rf binutils-2.37
 
-touch $LFS/logs/temptoolchain/status_binutils_pass1_complete
+touch "$LFS/logs/temptoolchain/status_binutils_pass1_complete"
 
 echo GCC-11.2.0 - Pass 1
 tar xf gcc-11.2.0.tar.xz
@@ -88,10 +88,10 @@ patch -Np1 -i /tools/CVE-2023-4039.patch
 mkdir -v build
 cd       build
 ../configure                                       \
-    --target=$LFS_TGT                              \
+    --target="$LFS_TGT"                            \
     --prefix=/tools                                \
     --with-glibc-version=2.11                      \
-    --with-sysroot=$LFS                            \
+    --with-sysroot="$LFS"                          \
     --with-newlib                                  \
     --without-headers                              \
     --with-local-prefix=/tools                     \
@@ -113,7 +113,7 @@ make install
 popd
 rm -rf gcc-11.2.0
 
-touch $LFS/logs/temptoolchain/status_gcc_pass1_complete
+touch "$LFS/logs/temptoolchain/status_gcc_pass1_complete"
 
 KERNEL_VERSION="5.15.48.1"
 echo Linux-${KERNEL_VERSION} API Headers
@@ -125,7 +125,7 @@ cp -rv usr/include/* /tools/include
 popd
 rm -rf CBL-Mariner-Linux-Kernel-rolling-lts-mariner-2-${KERNEL_VERSION}
 
-touch $LFS/logs/temptoolchain/status_kernel_headers_complete
+touch "$LFS/logs/temptoolchain/status_kernel_headers_complete"
 
 echo glibc-2.35
 tar xf glibc-2.35.tar.xz
@@ -163,7 +163,7 @@ echo End sanity check - temptoolchain - glibc
 popd
 rm -rf glibc-2.35
 
-touch $LFS/logs/temptoolchain/status_glibc_complete
+touch "$LFS/logs/temptoolchain/status_glibc_complete"
 
 echo Libstdc++ from GCC-11.2.0
 tar xf gcc-11.2.0.tar.xz
@@ -183,7 +183,7 @@ make install
 popd
 rm -rf gcc-11.2.0
 
-touch $LFS/logs/temptoolchain/status_libstdc++_complete
+touch "$LFS/logs/temptoolchain/status_libstdc++_complete"
 
 echo Binutils-2.37 - Pass 2
 tar xf binutils-2.37.tar.xz
@@ -207,7 +207,7 @@ cp -v ld/ld-new /tools/bin
 popd
 rm -rf binutils-2.37
 
-touch $LFS/logs/temptoolchain/status_binutils_pass2_complete
+touch "$LFS/logs/temptoolchain/status_binutils_pass2_complete"
 
 echo GCC-11.2.0 - Pass 2
 tar xf gcc-11.2.0.tar.xz
@@ -302,7 +302,7 @@ echo End sanity check - temptoolchain - gcc 11.2.0 pass2
 popd
 rm -rf gcc-11.2.0
 
-touch $LFS/logs/temptoolchain/status_gcc_pass2_complete
+touch "$LFS/logs/temptoolchain/status_gcc_pass2_complete"
 
 echo M4-1.4.19
 tar xf m4-1.4.19.tar.gz
@@ -313,7 +313,7 @@ make install
 popd
 rm -rf m4-1.4.19
 
-touch $LFS/logs/temptoolchain/status_m4_complete
+touch "$LFS/logs/temptoolchain/status_m4_complete"
 
 echo Ncurses-6.2
 tar xf ncurses-6.2.tar.gz
@@ -331,7 +331,7 @@ ln -s libncursesw.so /tools/lib/libncurses.so
 popd
 rm -rf ncurses-6.2
 
-touch $LFS/logs/temptoolchain/status_ncurses_complete
+touch "$LFS/logs/temptoolchain/status_ncurses_complete"
 
 echo Bash-5.1.8
 tar xf bash-5.1.8.tar.gz
@@ -343,7 +343,7 @@ ln -sv bash /tools/bin/sh
 popd
 rm -rf bash-5.1.8
 
-touch $LFS/logs/temptoolchain/status_bash_complete
+touch "$LFS/logs/temptoolchain/status_bash_complete"
 
 echo Bison-3.7.6
 tar xf bison-3.7.6.tar.xz
@@ -357,7 +357,7 @@ make install
 popd
 rm -rf bison-3.7.6
 
-touch $LFS/logs/temptoolchain/status_bison_complete
+touch "$LFS/logs/temptoolchain/status_bison_complete"
 
 echo Coreutils-8.32
 tar xf coreutils-8.32.tar.xz
@@ -373,7 +373,7 @@ make install
 popd
 rm -rf coreutils-8.32
 
-touch $LFS/logs/temptoolchain/status_coreutils_complete
+touch "$LFS/logs/temptoolchain/status_coreutils_complete"
 
 echo Diffutils-3.8
 tar xf diffutils-3.8.tar.xz
@@ -384,7 +384,7 @@ make install
 popd
 rm -rf diffutils-3.8
 
-touch $LFS/logs/temptoolchain/status_diffutils_complete
+touch "$LFS/logs/temptoolchain/status_diffutils_complete"
 
 echo File-5.40
 tar xf file-5.40.tar.gz
@@ -395,7 +395,7 @@ make install
 popd
 rm -rf file-5.40
 
-touch $LFS/logs/temptoolchain/status_file_complete
+touch "$LFS/logs/temptoolchain/status_file_complete"
 
 # "bzip2" should build after "file" to prevent error:
 #/temptoolchain/lfs/tools/bin/../lib/gcc/x86_64-pc-linux-gnu/11.2.0/../../../../lib/libbz2.a(blocksort.o): warning: relocation against `stderr@@GLIBC_2.2.5' in read-only section `.text'
@@ -409,7 +409,7 @@ make PREFIX=/tools install
 popd
 rm -rf bzip2-1.0.8
 
-touch $LFS/logs/temptoolchain/status_bzip2_complete
+touch "$LFS/logs/temptoolchain/status_bzip2_complete"
 
 echo Findutils-4.8.0
 tar xf findutils-4.8.0.tar.xz
@@ -420,7 +420,7 @@ make install
 popd
 rm -rf findutils-4.8.0
 
-touch $LFS/logs/temptoolchain/status_findutils_complete
+touch "$LFS/logs/temptoolchain/status_findutils_complete"
 
 echo Gawk-5.1.1
 tar xf gawk-5.1.1.tar.xz
@@ -431,7 +431,7 @@ make install
 popd
 rm -rf gawk-5.1.1
 
-touch $LFS/logs/temptoolchain/status_gawk_complete
+touch "$LFS/logs/temptoolchain/status_gawk_complete"
 
 echo Gettext-0.19.8.1
 tar xf gettext-0.19.8.1.tar.xz
@@ -442,7 +442,7 @@ cp -v gettext-tools/src/{msgfmt,msgmerge,xgettext} /tools/bin
 popd
 rm -rf gettext-0.19.8.1
 
-touch $LFS/logs/temptoolchain/status_gettext_complete
+touch "$LFS/logs/temptoolchain/status_gettext_complete"
 
 echo Grep-3.7
 tar xf grep-3.7.tar.xz
@@ -453,7 +453,7 @@ make install
 popd
 rm -rf grep-3.7
 
-touch $LFS/logs/temptoolchain/status_grep_complete
+touch "$LFS/logs/temptoolchain/status_grep_complete"
 
 echo Gzip-1.11
 tar xf gzip-1.11.tar.xz
@@ -464,7 +464,7 @@ make install
 popd
 rm -rf gzip-1.11
 
-touch $LFS/logs/temptoolchain/status_gzip_complete
+touch "$LFS/logs/temptoolchain/status_gzip_complete"
 
 echo Make-4.3
 tar xf make-4.3.tar.gz
@@ -475,7 +475,7 @@ make install
 popd
 rm -rf make-4.3
 
-touch $LFS/logs/temptoolchain/status_make_complete
+touch "$LFS/logs/temptoolchain/status_make_complete"
 
 echo Patch-2.7.6
 tar xf patch-2.7.6.tar.xz
@@ -486,7 +486,7 @@ make install
 popd
 rm -rf patch-2.7.6
 
-touch $LFS/logs/temptoolchain/status_patch_complete
+touch "$LFS/logs/temptoolchain/status_patch_complete"
 
 echo Perl-5.32.0
 tar xf perl-5.32.0.tar.xz
@@ -502,7 +502,7 @@ cp -Rv lib/* /tools/lib/perl5/5.32.0
 popd
 rm -rf perl-5.32.0
 
-touch $LFS/logs/temptoolchain/status_perl_complete
+touch "$LFS/logs/temptoolchain/status_perl_complete"
 
 echo Python-3.9.13
 tar xf Python-3.9.13.tar.xz
@@ -514,7 +514,7 @@ make install
 popd
 rm -rf Python-3.9.13
 
-touch $LFS/logs/temptoolchain/status_python_complete
+touch "$LFS/logs/temptoolchain/status_python_complete"
 
 echo Sed-4.8
 tar xf sed-4.8.tar.xz
@@ -525,7 +525,7 @@ make install
 popd
 rm -rf sed-4.8
 
-touch $LFS/logs/temptoolchain/status_sed_complete
+touch "$LFS/logs/temptoolchain/status_sed_complete"
 
 echo Tar-1.34
 tar xf tar-1.34.tar.xz
@@ -536,7 +536,7 @@ make install
 popd
 rm -rf tar-1.34
 
-touch $LFS/logs/temptoolchain/status_tar_complete
+touch "$LFS/logs/temptoolchain/status_tar_complete"
 
 echo Texinfo-6.8
 tar xf texinfo-6.8.tar.xz
@@ -550,7 +550,7 @@ make install
 popd
 rm -rf texinfo-6.8
 
-touch $LFS/logs/temptoolchain/status_texinfo_complete
+touch "$LFS/logs/temptoolchain/status_texinfo_complete"
 
 echo Xz-5.2.5
 tar xf xz-5.2.5.tar.xz
@@ -561,7 +561,7 @@ make install
 popd
 rm -rf xz-5.2.5
 
-touch $LFS/logs/temptoolchain/status_xz_complete
+touch "$LFS/logs/temptoolchain/status_xz_complete"
 
 echo Flex-2.6.4
 tar xf flex-2.6.4.tar.gz
@@ -574,8 +574,8 @@ make install
 popd
 rm -rf flex-2.6.4
 
-touch $LFS/logs/temptoolchain/status_flex_complete
+touch "$LFS/logs/temptoolchain/status_flex_complete"
 
-touch $LFS/logs/temptoolchain/temp_toolchain_complete
+touch "$LFS/logs/temptoolchain/temp_toolchain_complete"
 
 echo Done with script

@@ -37,7 +37,7 @@ function DockerBuild {
         --build-arg PACKAGES_TO_INSTALL="$packagesToInstall" \
         --build-arg PACKAGES_TO_HOLDBACK="$packagesToHoldback" \
         --build-arg USER="$user" \
-        --build-arg USER_UID=$userUid \
+        --build-arg USER_UID="$userUid" \
         --build-arg RPMS="$rpmsDir" \
         --build-arg LOCAL_REPO_FILE="$marinaraSrcDir/local.repo" \
         --no-cache

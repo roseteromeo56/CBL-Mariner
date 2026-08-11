@@ -22,7 +22,7 @@ MARINER_TOOLCHAIN_MANIFESTS_FILE=${12}
 # =====================================================
 BLDTRACKER=${13}
 TIMESTAMP_FILE_PATH=${14}
-source $(dirname  $0)/../timestamp.sh
+source "$(dirname "$0")/../timestamp.sh"
 # =====================================================
 
 begin_timestamp
@@ -68,7 +68,7 @@ fi
 # The build/toolchain/populated_toolchain folder might exist, but not have the unpacked
 # chroot environment inside it. So, we need to check if some expected directory exists
 # within $LFS.
-pushd $MARINER_BUILD_DIR/toolchain
+pushd "$MARINER_BUILD_DIR/toolchain"
 if [[ ! -d "$LFS/usr" ]]
 then
     echo "$LFS not populated with chroot environment yet, unpacking tarball"
@@ -76,15 +76,15 @@ then
 fi
 popd
 
-mkdir -pv $FINISHED_RPM_DIR
-mkdir -pv $CHROOT_SPECS_DIR
-mkdir -pv $CHROOT_SRPMS_DIR
-mkdir -pv $CHROOT_SOURCES_DIR
-mkdir -pv $CHROOT_INSTALL_RPM_DIR
-mkdir -pv $TOOLCHAIN_LOGS
-mkdir -pv $CHROOT_RPMS_DIR
-mkdir -pv $CHROOT_RPMS_DIR_ARCH
-mkdir -pv $CHROOT_RPMS_DIR_NOARCH
+mkdir -pv "$FINISHED_RPM_DIR"
+mkdir -pv "$CHROOT_SPECS_DIR"
+mkdir -pv "$CHROOT_SRPMS_DIR"
+mkdir -pv "$CHROOT_SOURCES_DIR"
+mkdir -pv "$CHROOT_INSTALL_RPM_DIR"
+mkdir -pv "$TOOLCHAIN_LOGS"
+mkdir -pv "$CHROOT_RPMS_DIR"
+mkdir -pv "$CHROOT_RPMS_DIR_ARCH"
+mkdir -pv "$CHROOT_RPMS_DIR_NOARCH"
 
 TEMP_DIR=$(mktemp -d -t)
 TEMP_BUILT_RPMS_LIST="$(mktemp --tmpdir="$TEMP_DIR")"
@@ -102,10 +102,10 @@ function clean_up {
 trap clean_up EXIT
 
 # Remove artifacts from previous toolchain builds
-sudo rm -f $TOOLCHAIN_BUILD_LIST
-sudo rm -f $TOOLCHAIN_FAILURES
-sudo rm -rf $CHROOT_BUILDROOT_DIR
-touch $TOOLCHAIN_FAILURES
+sudo rm -f "$TOOLCHAIN_BUILD_LIST"
+sudo rm -f "$TOOLCHAIN_FAILURES"
+sudo rm -rf "$CHROOT_BUILDROOT_DIR"
+touch "$TOOLCHAIN_FAILURES"
 
 stop_record_timestamp "prep_files"
 start_record_timestamp "hydrate"
@@ -238,7 +238,7 @@ chroot_and_run_rpmbuild () {
         rpmbuild --nodeps --rebuild --clean     \
             $CHECK_SETTING                 \
             --define "with_check $CHECK_DEFINE_NUM" --define "dist $PARAM_DIST_TAG" --define "mariner_build_number $PARAM_BUILD_NUM" \
-            --define "mariner_release_version $PARAM_RELEASE_VER" $TOPDIR/SRPMS/$1 \
+            --define "mariner_release_version $PARAM_RELEASE_VER" "$TOPDIR/SRPMS/$1" \
             --define "mariner_module_ldflags -Wl,-dT,%{_topdir}/BUILD/module_info.ld" \
             || echo "$1" >> "$TOOLCHAIN_FAILURES"
 
@@ -252,13 +252,17 @@ build_rpm_in_chroot_no_install () {
     start_record_timestamp "build packages/build/$1"
     # $1 = spec name
 
-    specPath=$(find $SPECROOT -name "$1.spec" -print -quit)
-    specDir=$(dirname $specPath)
+    specPath=$(find "$SPECROOT" -name "$1.spec" -print -quit)
+    specDir=$(dirname "$specPath")
     rpmMacros=(-D "with_check $CHECK_DEFINE_NUM" -D "_sourcedir $specDir" -D "dist $PARAM_DIST_TAG")
-    builtRpms="$(rpmspec -q $specPath --builtrpms "${rpmMacros[@]}" --queryformat="%{nvra}.rpm\n")"
+    builtRpmsOutput="$(rpmspec -q "$specPath" --builtrpms "${rpmMacros[@]}" --queryformat="%{nvra}.rpm\n")"
+    builtRpms=()
+    if [[ -n "$builtRpmsOutput" ]]; then
+        mapfile -t builtRpms <<< "$builtRpmsOutput"
+    fi
 
     builtEarlier=false
-    if grep -qP "^$1\$" $TEMP_BUILT_SPECS_LIST; then
+    if grep -qP "^$1\$" "$TEMP_BUILT_SPECS_LIST"; then
         builtEarlier=true
     fi
 
@@ -274,31 +278,31 @@ build_rpm_in_chroot_no_install () {
     elif [ "$INCREMENTAL_TOOLCHAIN" = "y" ]; then
         # Find all the associated RPMs for the SRPM and check if they are in the chroot RPM directory.
         skipBuild=true
-        for rpm in $builtRpms; do
-            rpmPath=$(find $CHROOT_RPMS_DIR -name "$rpm" -print -quit)
+        for rpm in "${builtRpms[@]}"; do
+            rpmPath=$(find "$CHROOT_RPMS_DIR" -name "$rpm" -print -quit)
             if [ -z "$rpmPath" ]; then
                 echo "Did not find incremental toolchain rpm '$rpm' in '$CHROOT_RPMS_DIR', must rebuild."
                 skipBuild=false
                 break
             else
-                cp $rpmPath $FINISHED_RPM_DIR
+                cp "$rpmPath" "$FINISHED_RPM_DIR"
             fi
         done
     fi
 
     if ! $skipBuild; then
         echo only building RPM $1 within the chroot
-        srpmName=$(rpmspec -q $specPath --srpm "${rpmMacros[@]}" --queryformat %{NAME}-%{VERSION}-%{RELEASE}.src.rpm)
+        srpmName=$(rpmspec -q "$specPath" --srpm "${rpmMacros[@]}" --queryformat %{NAME}-%{VERSION}-%{RELEASE}.src.rpm)
         srpmPath=$MARINER_INPUT_SRPMS_DIR/$srpmName
-        cp $srpmPath $CHROOT_SRPMS_DIR
-        chroot_and_run_rpmbuild $srpmName 2>&1 | awk '{ print strftime("time=\"%Y-%m-%dT%T%Z\""), $0; fflush(); }' | tee $TOOLCHAIN_LOGS/$srpmName.log
-        copy_built_rpms $builtRpms
-        cp $srpmPath $MARINER_OUTPUT_SRPMS_DIR
-        echo "$1" >> $TEMP_BUILT_SPECS_LIST
-        echo NOT installing the package $srpmName
+        cp "$srpmPath" "$CHROOT_SRPMS_DIR"
+        chroot_and_run_rpmbuild "$srpmName" 2>&1 | awk '{ print strftime("time=\"%Y-%m-%dT%T%Z\""), $0; fflush(); }' | tee "$TOOLCHAIN_LOGS/$srpmName.log"
+        copy_built_rpms "${builtRpms[@]}"
+        cp "$srpmPath" "$MARINER_OUTPUT_SRPMS_DIR"
+        echo "$1" >> "$TEMP_BUILT_SPECS_LIST"
+        echo NOT installing the package "$srpmName"
     fi
 
-    echo "$1" >> $TOOLCHAIN_BUILD_LIST
+    echo "$1" >> "$TOOLCHAIN_BUILD_LIST"
     stop_record_timestamp "build packages/build/$1"
 }
 

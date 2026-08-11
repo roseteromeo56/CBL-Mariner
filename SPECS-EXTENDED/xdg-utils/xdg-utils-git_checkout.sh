@@ -7,11 +7,11 @@ DATE=$(date +%Y%m%d)git
 
 set -x
 
-rm -rf $MODULE
+rm -rf -- "$MODULE"
 
-git clone git://anongit.freedesktop.org/git/xdg/xdg-utils $MODULE/
-pushd $MODULE
-git archive master --format tar --prefix=${MODULE}-${VERSION}/ | gzip -9 > ../${MODULE}-${VERSION}-${DATE}.tar.gz
+git clone git://anongit.freedesktop.org/git/xdg/xdg-utils "$MODULE/"
+pushd "$MODULE"
+git archive master --format tar --prefix="${MODULE}-${VERSION}/" | gzip -9 > "../${MODULE}-${VERSION}-${DATE}.tar.gz"
 popd
 
-rm -rf $MODULE 
+rm -rf -- "$MODULE"

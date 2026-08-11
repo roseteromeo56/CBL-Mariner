@@ -157,7 +157,8 @@ buildReaperSources
 createCacheTars
 
 mkdir "$HOME/reaper_caches"
-
+ dd/automation/quote-reaper-cache-vars-0b8e7059
 cp -a "$reaperCacheDir" "$HOME/reaper_caches"
+cp -a "${reaperCacheDir}" "$HOME/reaper_caches" 2.0
 
 echo "Copied cache tars to $HOME/reaper_caches/ .Exiting."

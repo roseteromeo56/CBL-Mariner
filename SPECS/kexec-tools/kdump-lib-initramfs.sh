@@ -199,7 +199,7 @@ dump_to_rootfs()
     echo "Kdump: waiting for rootfs mount, will timeout after 90 seconds"
     systemctl start sysroot.mount
 
-    dump_fs $NEWROOT
+    dump_fs "$NEWROOT"
 }
 
 kdump_emergency_shell()

@@ -2,7 +2,7 @@
 set -e
 
 name=jsoup
-version="$(sed -n 's/Version:\s*//p' *.spec)"
+version="$(sed -n 's/Version:\s*//p' ./*.spec)"
 
 # RETRIEVE
 wget "https://github.com/jhy/${name}/archive/${name}-${version}.tar.gz" -O "${name}-${version}.orig.tar.gz"
