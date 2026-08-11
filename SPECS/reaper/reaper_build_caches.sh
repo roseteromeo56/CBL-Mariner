@@ -36,7 +36,7 @@ function cleanup {
 	exit_code=$?
 	set +e
 	if [[ -n $tempDir ]];then
-		rm -Rf $tempDir
+		rm -Rf "$tempDir"
 		echo "Deleted $tempDir."
 	fi
 	exit $exit_code
@@ -47,8 +47,8 @@ trap cleanup EXIT SIGINT SIGTERM
 reaperCacheDir=${tempDir}/reaper_caches
 homeCacheDir=${tempDir}/cache
 
-mkdir -p ${reaperCacheDir}
-mkdir -p ${homeCacheDir}
+mkdir -p "$reaperCacheDir"
+mkdir -p "$homeCacheDir"
 
 function checkInternet {
 	sudo tdnf install -y nc
@@ -72,13 +72,13 @@ function installNodeModules {
 	# is incoorectly set that causes 'which' to still point to older path, as access/newfstatat fail with -ENOPERM
 	# Setting a new global npm folder for fixing permission issues.
 	# (works well with id=0, but reaper build will fail.)
-	mkdir --mode 0777 $homeCacheDir/.npm-global
+	mkdir --mode 0777 "$homeCacheDir/.npm-global"
 	npm config set prefix "$homeCacheDir/.npm-global"
-	export PATH="$homeCacheDir/.npm-global/bin":$PATH
+	export PATH="$homeCacheDir/.npm-global/bin:$PATH"
 	npm install -g n
 	export N_PREFIX="$homeCacheDir/.npm-global"
 	n 14.18.0
-	export XDG_CACHE_HOME=$homeCacheDir/.cache
+	export XDG_CACHE_HOME="$homeCacheDir/.cache"
 	npm install -g bower
 	# Clear bash hash tables for node/npm paths
 	hash -r
@@ -88,11 +88,11 @@ function installNodeModules {
 }
 
 function buildReaperSources {
-	pushd $tempDir
+	pushd "$tempDir"
 	sudo tdnf install -y wget
-	wget $SOURCE_URL -O reaper.tar.gz
+	wget "$SOURCE_URL" -O reaper.tar.gz
 	tar -xf reaper.tar.gz
-	cd cassandra-reaper-${VERSION}
+	cd "cassandra-reaper-${VERSION}"
 	export JAVA_HOME="/usr/lib/jvm/msopenjdk-11"
 	export LD_LIBRARY_PATH="/usr/lib/jvm/msopenjdk-11/lib/jli"
 	echo "Building reaper in online mode."
@@ -102,40 +102,40 @@ function buildReaperSources {
 
 function createCacheTars {
 	echo "Creating build caches."
-	pushd ${homeCacheDir}
+	pushd "$homeCacheDir"
 	echo "creating bower_cache tar..."
-	tar -cf ${BOWER_CACHE} .cache
-	mv ${BOWER_CACHE} ${reaperCacheDir}
+	tar -cf "$BOWER_CACHE" .cache
+	mv "$BOWER_CACHE" "$reaperCacheDir"
 
 	echo "creating maven_cache tar..."
-	tar -cf ${MAVEN_CACHE} .m2
-	mv ${MAVEN_CACHE} ${reaperCacheDir}
+	tar -cf "$MAVEN_CACHE" .m2
+	mv "$MAVEN_CACHE" "$reaperCacheDir"
 
 	echo "creating npm_cache tar..."
-	tar -cf ${NPM_CACHE} .npm
-	mv ${NPM_CACHE} ${reaperCacheDir}
+	tar -cf "$NPM_CACHE" .npm
+	mv "$NPM_CACHE" "$reaperCacheDir"
 	popd
 
-	pushd ${tempDir}/cassandra-reaper-${VERSION}/src/ui
+	pushd "$tempDir/cassandra-reaper-${VERSION}/src/ui"
 	echo "creating bower_components tar..."
-	tar -cf ${BOWER_COMPONENTS} bower_components
-	mv ${BOWER_COMPONENTS} ${reaperCacheDir}
+	tar -cf "$BOWER_COMPONENTS" bower_components
+	mv "$BOWER_COMPONENTS" "$reaperCacheDir"
 
 	echo "creating node_modules tar..."
-	tar -cf ${SRC_UI_NODE_MODULES} node_modules
-	mv ${SRC_UI_NODE_MODULES} ${reaperCacheDir}
+	tar -cf "$SRC_UI_NODE_MODULES" node_modules
+	mv "$SRC_UI_NODE_MODULES" "$reaperCacheDir"
 	popd
 
-	pushd $homeCacheDir/.npm-global/lib
+	pushd "$homeCacheDir/.npm-global/lib"
 	echo "creating local_lib_node_modules tar..."
-	tar -cf ${LOCAL_LIB_NODE_MODULES} node_modules
-	mv ${LOCAL_LIB_NODE_MODULES} ${reaperCacheDir}
+	tar -cf "$LOCAL_LIB_NODE_MODULES" node_modules
+	mv "$LOCAL_LIB_NODE_MODULES" "$reaperCacheDir"
 	popd
 
-	pushd $homeCacheDir/.npm-global
+	pushd "$homeCacheDir/.npm-global"
 	echo "creating local node tar..."
-	tar -cf ${LOCAL_N} n
-	mv ${LOCAL_N} ${reaperCacheDir}
+	tar -cf "$LOCAL_N" n
+	mv "$LOCAL_N" "$reaperCacheDir"
 	popd
 }
 
@@ -157,7 +157,8 @@ buildReaperSources
 createCacheTars
 
 mkdir "$HOME/reaper_caches"
-
-cp -a "${reaperCacheDir}" "$HOME/reaper_caches"
+ dd/automation/quote-reaper-cache-vars-0b8e7059
+cp -a "$reaperCacheDir" "$HOME/reaper_caches"
+cp -a "${reaperCacheDir}" "$HOME/reaper_caches" 2.0
 
 echo "Copied cache tars to $HOME/reaper_caches/ .Exiting."
