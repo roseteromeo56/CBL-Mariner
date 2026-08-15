@@ -545,17 +545,30 @@ check_current_kdump_status()
 # For each "arg" in the removing params list, "arg" and "arg=xxx" will be removed if exists.
 remove_cmdline_param()
 {
-    local cmdline=$1
+    local cmdline="$1"
+    local arg param
     shift
 
-    for arg in $@; do
-        cmdline=`echo $cmdline | \
-                 sed -e "s/\b$arg=[^ ]*//g" \
-                 -e "s/^$arg\b//g" \
-                 -e "s/[[:space:]]$arg\b//g" \
-                 -e "s/\s\+/ /g"`
+    for arg in "$@"; do
+        while IFS= read -r param; do
+            [ -n "$param" ] || continue
+            cmdline=`printf '%s\n' "$cmdline" | \
+                     awk -v remove="$param" '{
+                         output = ""
+                         for (i = 1; i <= NF; i++) {
+                             key = $i
+                             sub(/=.*/, "", key)
+                             if (key == remove)
+                                 continue
+                             output = output (output ? " " : "") $i
+                         }
+                         print output
+                     }'`
+        done <<EOF
+$(printf '%s\n' "$arg" | tr '[:space:]' '\n')
+EOF
     done
-    echo $cmdline
+    printf '%s\n' "$cmdline"
 }
 
 #
