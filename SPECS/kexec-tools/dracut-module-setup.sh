@@ -443,16 +443,16 @@ default_dump_target_install_conf()
 
     is_user_configured_dump_target && return
 
-    _save_path=$(get_bind_mount_source $(get_save_path))
-    _target=$(get_target_from_path $_save_path)
-    _mntpoint=$(get_mntpoint_from_target $_target)
+    _save_path=$(get_bind_mount_source "$(get_save_path)")
+    _target=$(get_target_from_path "$_save_path")
+    _mntpoint=$(get_mntpoint_from_target "$_target")
 
-    _fstype=$(get_fs_type_from_target $_target)
-    if is_fs_type_nfs $_fstype; then
+    _fstype=$(get_fs_type_from_target "$_target")
+    if is_fs_type_nfs "$_fstype"; then
         kdump_install_net "$_target"
         _fstype="nfs"
     else
-        _target=$(kdump_get_persistent_dev $_target)
+        _target=$(kdump_get_persistent_dev "$_target")
     fi
 
     echo "$_fstype $_target" >> ${initdir}/tmp/$$-kdump.conf

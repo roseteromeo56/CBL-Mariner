@@ -9,8 +9,8 @@
   "dracut-kdump-error-handler.service": "d5cd3a6cce04955a07ae5cd7790ae17365b90a4989f1888d7b7f487316a1544d",
   "dracut-kdump-error-handler.sh": "23bb509940a9ecc3944bb88526b974f49cfb7d6c133fe11615d8d4604141e4c9",
   "dracut-kdump.sh": "0aef51b237b0d1fb7eed6a5eea2fd1d81d251d6ecb084a57b5070224cab0315c" dd/automation/fix/kexec-static-route-quoting-20260808
-  "dracut-module-setup.sh": "48c8fb8f493ee8fc1c37282e91a292343425a3bd6dc29fa0d56cdf0b32e38007",
-  "dracut-module-setup.sh": "1c1f2e4ecdcd44beb07ea6adfadfbba7a420e202be950bb71e8e9de98cf0165b", 2.0
+  "dracut-module-setup.sh": "c3347c363b2f6e0f1f13a6e9f35adebde68a0d681e3fd25b0bb16b3635fa4e3a",
+  "dracut-module-setup.sh": "c3347c363b2f6e0f1f13a6e9f35adebde68a0d681e3fd25b0bb16b3635fa4e3a", 2.0
   "dracut-monitor_dd_progress": "2e343a54c032f6af0d5f7b5fb49f2d90057b2a234625fe7ee6c1afb21cb5c435",
   "early-kdump-howto.txt": "984d51f3d9e7f2f858ef153418190c470bf20ee702c97fe34285c6d05078999c",
   "eppic-e8844d3.tar.gz": "5bf3fce09fc880a96cbc0cbb3eadcae1892d7fd43350a585f150b1cce176b128",
@@ -18,7 +18,7 @@
   "kdump-dep-generator.sh": "f660e26df9c4843340093a294bcd41a68a71cea48314b5d1a3553bba5038bbbc",
   "kdump-in-cluster-environment.txt": "50784977e2c3a425ae00de4831f9fd4fb4a04574db1a72b9b28f7c0979a52564",
   "kdump-lib-initramfs.sh": "a031d1318e81ea3636213b364aa37ea5efa76e797cdb25947da121967f0aee06",
-  "kdump-lib.sh": "3d50507626d4a92b8448c7d6604923f6f460c4cb5c8b18977381a7d5e516dfba",
+  "kdump-lib.sh": "5c641456aeab5a0705a2f175a68db16fb0c9c250c7aaca98d54891e4d19bdc37",
   "kdump-udev-throttler": "125d538a59172f779b40ea32fea1e4eb50d849f25eb2537a48328d4401136679",
   "kdump.conf": "1d7ed03fa55f52047a6be4047cb2bfea08ac025b82d52ace86d69e2ec06e2ce7",
   "kdump.conf.5": "bab6c7b171f76e8c6df91bb7db852815caacbc3cd3d4309a1dc58d36950440e4",
