@@ -86,12 +86,78 @@ quote_for_remote_shell()
     printf "'%s'" "$(printf "%s" "$1" | sed "s/'/'\\\\''/g")"
 }
 
-ssh_kdump()
+ssh_kdump_run()
 {
     local _ssh_key=$1
-    shift
+    local _host=$2
+    local _remote_command=$3
+    local _quiet=$4
+    local _restore_glob=0
+    local _ret
+    # Preserve the pre-quoted remote command as one ssh operand.
+    local IFS=
 
-    ssh -i "$_ssh_key" -o BatchMode=yes -o StrictHostKeyChecking=yes "$@"
+    case $- in
+        *f*) ;;
+        *)
+            _restore_glob=1
+            set -f
+            ;;
+    esac
+
+    if [ "$_quiet" = "quiet" ]; then
+        ssh -q -i "$_ssh_key" -o BatchMode=yes -o StrictHostKeyChecking=yes "$_host" $_remote_command
+    else
+        ssh -i "$_ssh_key" -o BatchMode=yes -o StrictHostKeyChecking=yes "$_host" $_remote_command
+    fi
+    _ret=$?
+
+    [ $_restore_glob -eq 0 ] || set +f
+    return $_ret
+}
+
+ssh_kdump_mkdir()
+{
+    local _ssh_key=$1
+    local _host=$2
+    local _path_remote=$(quote_for_remote_shell "$3")
+
+    ssh_kdump_run "$_ssh_key" "$_host" 'mkdir -p '"$_path_remote" quiet
+}
+
+ssh_kdump_mv()
+{
+    local _ssh_key=$1
+    local _host=$2
+    local _source_remote=$(quote_for_remote_shell "$3")
+    local _destination_remote=$(quote_for_remote_shell "$4")
+    local _quiet=$5
+
+    ssh_kdump_run "$_ssh_key" "$_host" 'mv '"$_source_remote"' '"$_destination_remote" "$_quiet"
+}
+
+ssh_kdump_dd()
+{
+    local _ssh_key=$1
+    local _host=$2
+    local _output_remote=$(quote_for_remote_shell "$3")
+    local _block_size=$4
+    local _remote_command
+
+    case "$_block_size" in
+        "")
+            _remote_command='dd of='"$_output_remote"
+            ;;
+        *[!0-9]*)
+            echo "kdump: invalid remote dd block size: $_block_size"
+            return 1
+            ;;
+        *)
+            _remote_command='dd bs='"$_block_size"' of='"$_output_remote"
+            ;;
+    esac
+
+    ssh_kdump_run "$_ssh_key" "$_host" "$_remote_command"
 }
 
 scp_kdump()
@@ -129,15 +195,11 @@ dump_ssh()
     local _ssh_key=$1
     local _dir="$KDUMP_PATH/$HOST_IP-$DATEDIR"
     local _host=$2
-    local _dir_remote=$(quote_for_remote_shell "$_dir")
-    local _vmcore_incomplete_remote=$(quote_for_remote_shell "$_dir/vmcore-incomplete")
-    local _vmcore_remote=$(quote_for_remote_shell "$_dir/vmcore")
-    local _vmcore_flat_remote=$(quote_for_remote_shell "$_dir/vmcore.flat")
 
     echo "kdump: saving to $_host:$_dir"
 
     cat /var/lib/random-seed > /dev/urandom
-    ssh_kdump "$_ssh_key" -q "$_host" 'mkdir -p '"$_dir_remote" || return 1
+    ssh_kdump_mkdir "$_ssh_key" "$_host" "$_dir" || return 1
 
     save_vmcore_dmesg_ssh "$DMESG_COLLECTOR" "$_dir" "$_ssh_key" "$_host"
     save_opalcore_ssh "$_dir" "$_ssh_key" "$_host"
@@ -146,10 +208,10 @@ dump_ssh()
 
     if [ "${CORE_COLLECTOR%%[[:blank:]]*}" = "scp" ]; then
         scp_kdump "$_ssh_key" -q /proc/vmcore "$_host:$_dir/vmcore-incomplete" || return 1
-        ssh_kdump "$_ssh_key" "$_host" 'mv '"$_vmcore_incomplete_remote"' '"$_vmcore_remote" || return 1
+        ssh_kdump_mv "$_ssh_key" "$_host" "$_dir/vmcore-incomplete" "$_dir/vmcore" || return 1
     else
-        $CORE_COLLECTOR /proc/vmcore | ssh_kdump "$_ssh_key" "$_host" 'dd bs=512 of='"$_vmcore_incomplete_remote" || return 1
-        ssh_kdump "$_ssh_key" "$_host" 'mv '"$_vmcore_incomplete_remote"' '"$_vmcore_flat_remote" || return 1
+        $CORE_COLLECTOR /proc/vmcore | ssh_kdump_dd "$_ssh_key" "$_host" "$_dir/vmcore-incomplete" 512 || return 1
+        ssh_kdump_mv "$_ssh_key" "$_host" "$_dir/vmcore-incomplete" "$_dir/vmcore.flat" || return 1
     fi
 
     echo "kdump: saving vmcore complete"
@@ -160,8 +222,6 @@ save_opalcore_ssh() {
     local _path=$1
     local _ssh_key=$2
     local _location=$3
-    local _opalcore_incomplete_remote=$(quote_for_remote_shell "$_path/opalcore-incomplete")
-    local _opalcore_remote=$(quote_for_remote_shell "$_path/opalcore")
 
     if [ ! -f $OPALCORE ]; then
         # Check if we are on an old kernel that uses a different path
@@ -179,7 +239,7 @@ save_opalcore_ssh() {
        return 1
     fi
 
-    ssh_kdump "$_ssh_key" "$_location" 'mv '"$_opalcore_incomplete_remote"' '"$_opalcore_remote"
+    ssh_kdump_mv "$_ssh_key" "$_location" "$_path/opalcore-incomplete" "$_path/opalcore"
     echo "kdump: saving opalcore complete"
     return 0
 }
@@ -189,15 +249,13 @@ save_vmcore_dmesg_ssh() {
     local _path=$2
     local _ssh_key=$3
     local _location=$4
-    local _dmesg_incomplete_remote=$(quote_for_remote_shell "${_path}/vmcore-dmesg-incomplete.txt")
-    local _dmesg_remote=$(quote_for_remote_shell "${_path}/vmcore-dmesg.txt")
 
     echo "kdump: saving vmcore-dmesg.txt"
-    "$_dmesg_collector" /proc/vmcore | ssh_kdump "$_ssh_key" "$_location" 'dd of='"$_dmesg_incomplete_remote"
+    "$_dmesg_collector" /proc/vmcore | ssh_kdump_dd "$_ssh_key" "$_location" "${_path}/vmcore-dmesg-incomplete.txt"
     _exitcode=$?
 
     if [ $_exitcode -eq 0 ]; then
-        ssh_kdump "$_ssh_key" -q "$_location" 'mv '"$_dmesg_incomplete_remote"' '"$_dmesg_remote"
+        ssh_kdump_mv "$_ssh_key" "$_location" "${_path}/vmcore-dmesg-incomplete.txt" "${_path}/vmcore-dmesg.txt" quiet
         echo "kdump: saving vmcore-dmesg.txt complete"
     else
         echo "kdump: saving vmcore-dmesg.txt failed"
