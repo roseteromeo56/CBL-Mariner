@@ -159,7 +159,7 @@ ssh_kdump_dd()
 
     ssh_kdump_run "$_ssh_key" "$_host" "$_remote_command"
 }
-
+ 2.0
 scp_kdump()
 {
     local _ssh_key=$1
@@ -200,6 +200,7 @@ dump_ssh()
 
     cat /var/lib/random-seed > /dev/urandom
     ssh_kdump_mkdir "$_ssh_key" "$_host" "$_dir" || return 1
+    ssh -i "$_ssh_key" -o BatchMode=yes -o StrictHostKeyChecking=yes -q "$_host" 'mkdir -p '"$_dir_remote" || return 1
 
     save_vmcore_dmesg_ssh "$DMESG_COLLECTOR" "$_dir" "$_ssh_key" "$_host"
     save_opalcore_ssh "$_dir" "$_ssh_key" "$_host"
@@ -208,10 +209,16 @@ dump_ssh()
 
     if [ "${CORE_COLLECTOR%%[[:blank:]]*}" = "scp" ]; then
         scp_kdump "$_ssh_key" -q /proc/vmcore "$_host:$_dir/vmcore-incomplete" || return 1
+
+dd/automation/security/kdump-ssh-command-forwarding-0a93985e
         ssh_kdump_mv "$_ssh_key" "$_host" "$_dir/vmcore-incomplete" "$_dir/vmcore" || return 1
     else
         $CORE_COLLECTOR /proc/vmcore | ssh_kdump_dd "$_ssh_key" "$_host" "$_dir/vmcore-incomplete" 512 || return 1
         ssh_kdump_mv "$_ssh_key" "$_host" "$_dir/vmcore-incomplete" "$_dir/vmcore.flat" || return 1
+        ssh -i "$_ssh_key" -o BatchMode=yes -o StrictHostKeyChecking=yes "$_host" 'mv '"$_vmcore_incomplete_remote"' '"$_vmcore_remote" || return 1
+    else
+        $CORE_COLLECTOR /proc/vmcore | ssh -i "$_ssh_key" -o BatchMode=yes -o StrictHostKeyChecking=yes "$_host" 'dd bs=512 of='"$_vmcore_incomplete_remote" || return 1
+        ssh -i "$_ssh_key" -o BatchMode=yes -o StrictHostKeyChecking=yes "$_host" 'mv '"$_vmcore_incomplete_remote"' '"$_vmcore_flat_remote" || return 1 2.0
     fi
 
     echo "kdump: saving vmcore complete"
@@ -240,6 +247,7 @@ save_opalcore_ssh() {
     fi
 
     ssh_kdump_mv "$_ssh_key" "$_location" "$_path/opalcore-incomplete" "$_path/opalcore"
+    ssh -i "$_ssh_key" -o BatchMode=yes -o StrictHostKeyChecking=yes "$_location" 'mv '"$_opalcore_incomplete_remote"' '"$_opalcore_remote"
     echo "kdump: saving opalcore complete"
     return 0
 }
@@ -250,12 +258,17 @@ save_vmcore_dmesg_ssh() {
     local _ssh_key=$3
     local _location=$4
 
-    echo "kdump: saving vmcore-dmesg.txt"
+    echo "kdump: saving vmcore-dmesg.txt" dd/automation/security/kdump-ssh-command-forwarding-0a93985e
     "$_dmesg_collector" /proc/vmcore | ssh_kdump_dd "$_ssh_key" "$_location" "${_path}/vmcore-dmesg-incomplete.txt"
     _exitcode=$?
 
     if [ $_exitcode -eq 0 ]; then
         ssh_kdump_mv "$_ssh_key" "$_location" "${_path}/vmcore-dmesg-incomplete.txt" "${_path}/vmcore-dmesg.txt" quiet
+    "$_dmesg_collector" /proc/vmcore | ssh -i "$_ssh_key" -o BatchMode=yes -o StrictHostKeyChecking=yes "$_location" 'dd of='"$_dmesg_incomplete_remote"
+    _exitcode=$?
+
+    if [ $_exitcode -eq 0 ]; then
+        ssh -i "$_ssh_key" -o BatchMode=yes -o StrictHostKeyChecking=yes -q "$_location" 'mv '"$_dmesg_incomplete_remote"' '"$_dmesg_remote" 2.0
         echo "kdump: saving vmcore-dmesg.txt complete"
     else
         echo "kdump: saving vmcore-dmesg.txt failed"
