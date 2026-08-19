@@ -218,22 +218,22 @@ get_kdump_targets()
 # part is the bind mounted directory which quotes by bracket "[]".
 get_bind_mount_source()
 {
-    local _path=$1
+    local _path="$1"
     # In case it's a sub path in a mount point, get the mount point first
-    local _mnt_top=$(df $_path | tail -1 | awk '{print $NF}')
-    local _mntpoint=$(findmnt $_mnt_top | tail -n 1 | awk '{print $2}')
-    local _mntpoint_nofsroot=$(findmnt -v $_mnt_top | tail -n 1 | awk '{print $2}')
+    local _mnt_top=$(df -- "$_path" | tail -1 | awk '{print $NF}')
+    local _mntpoint=$(findmnt -- "$_mnt_top" | tail -n 1 | awk '{print $2}')
+    local _mntpoint_nofsroot=$(findmnt -v -- "$_mnt_top" | tail -n 1 | awk '{print $2}')
 
-    if [[ "$_mntpoint" = $_mntpoint_nofsroot ]]; then
-        echo $_path && return
+    if [[ "$_mntpoint" = "$_mntpoint_nofsroot" ]]; then
+        echo "$_path" && return
     fi
 
-    _mntpoint=${_mntpoint#*$_mntpoint_nofsroot}
+    _mntpoint=${_mntpoint#*"$_mntpoint_nofsroot"}
     _mntpoint=${_mntpoint#[}
     _mntpoint=${_mntpoint%]}
-    _path=${_path#$_mnt_top}
+    _path=${_path#"$_mnt_top"}
 
-    echo $_mntpoint$_path
+    echo "$_mntpoint$_path"
 }
 
 # Return the current underlaying device of a path, ignore bind mounts
@@ -545,17 +545,30 @@ check_current_kdump_status()
 # For each "arg" in the removing params list, "arg" and "arg=xxx" will be removed if exists.
 remove_cmdline_param()
 {
-    local cmdline=$1
+    local cmdline="$1"
+    local arg param
     shift
 
-    for arg in $@; do
-        cmdline=`echo $cmdline | \
-                 sed -e "s/\b$arg=[^ ]*//g" \
-                 -e "s/^$arg\b//g" \
-                 -e "s/[[:space:]]$arg\b//g" \
-                 -e "s/\s\+/ /g"`
+    for arg in "$@"; do
+        while IFS= read -r param; do
+            [ -n "$param" ] || continue
+            cmdline=`printf '%s\n' "$cmdline" | \
+                     awk -v remove="$param" '{
+                         output = ""
+                         for (i = 1; i <= NF; i++) {
+                             key = $i
+                             sub(/=.*/, "", key)
+                             if (key == remove)
+                                 continue
+                             output = output (output ? " " : "") $i
+                         }
+                         print output
+                     }'`
+        done <<EOF
+$(printf '%s\n' "$arg" | tr '[:space:]' '\n')
+EOF
     done
-    echo $cmdline
+    printf '%s\n' "$cmdline"
 }
 
 #
