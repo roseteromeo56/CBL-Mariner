@@ -194,7 +194,11 @@ dump_ssh()
 {
     local _ssh_key=$1
     local _dir="$KDUMP_PATH/$HOST_IP-$DATEDIR"
-    local _host=$2
+    local _host=$2 dd/automation/fix/kdump-ssh-remote-path-quoting-20260817
+    local _dir_remote=$(quote_for_remote_shell "$_dir")
+    local _vmcore_incomplete_remote=$(quote_for_remote_shell "$_dir/vmcore-incomplete")
+    local _vmcore_remote=$(quote_for_remote_shell "$_dir/vmcore")
+    local _vmcore_flat_remote=$(quote_for_remote_shell "$_dir/vmcore.flat") 2.0
 
     echo "kdump: saving to $_host:$_dir"
 
@@ -256,7 +260,9 @@ save_vmcore_dmesg_ssh() {
     local _dmesg_collector=$1
     local _path=$2
     local _ssh_key=$3
-    local _location=$4
+    local _location=$4 dd/automation/fix/kdump-ssh-remote-path-quoting-20260817
+    local _dmesg_incomplete_remote=$(quote_for_remote_shell "$_path/vmcore-dmesg-incomplete.txt")
+    local _dmesg_remote=$(quote_for_remote_shell "$_path/vmcore-dmesg.txt") 2.0
 
     echo "kdump: saving vmcore-dmesg.txt" dd/automation/security/kdump-ssh-command-forwarding-0a93985e
     "$_dmesg_collector" /proc/vmcore | ssh_kdump_dd "$_ssh_key" "$_location" "${_path}/vmcore-dmesg-incomplete.txt"
