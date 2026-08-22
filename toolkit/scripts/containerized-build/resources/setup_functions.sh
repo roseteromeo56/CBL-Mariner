@@ -118,21 +118,21 @@ update_specs_metadata() {
 
 # Install package dependencies using depsearch tool
 install_dependencies_depsearch() {
-    local PKG=("$@")
+    local PKG="$*"
     if [ -z "$PKG" ]; then echo "Please provide pkg name"; return; fi
     echo "-------- installing dependencies ---------"
-    dep_list=$(get_pkg_dependency $PKG)
+    dep_list="$(get_pkg_dependency "$PKG")"
     for dependency in $dep_list
     do
-        tdnf install -y $dependency 2>&1
+        tdnf install -y "$dependency" 2>&1
     done
 }
 
 # Get dependencies of a package using depsearch tool
 get_pkg_dependency() {
-    local PKG=("$@")
+    local PKG="$*"
     if [ -z "$PKG" ]; then echo "Please provide pkg name"; return; fi
-    /mariner_setup_dir/depsearch --input=/mariner_setup_dir/graph.dot  --packages=$PKG --reverse
+    /mariner_setup_dir/depsearch --input=/mariner_setup_dir/graph.dot  --packages="$PKG" --reverse
 }
 
 # Install package dependencies listed as BuildRequires in spec
