@@ -57,7 +57,7 @@ kdump_is_bond() {
 }
 
 kdump_is_team() {
-     [ -f /usr/bin/teamnl ] && teamnl $1 ports &> /dev/null
+     [ -f /usr/bin/teamnl ] && teamnl "$1" ports &> /dev/null
 }
 
 kdump_is_vlan() {
@@ -257,7 +257,7 @@ kdump_setup_team() {
     local _netdev=$1
     local _dev _mac _slaves _kdumpdev
     local _team_conf="${initdir}/tmp/$$-$_netdev.conf"
-    for _dev in `teamnl $_netdev ports | awk -F':' '{print $2}'`; do
+    for _dev in `teamnl "$_netdev" ports | awk -F':' '{print $2}'`; do
         _mac=$(kdump_get_perm_addr $_dev)
         _kdumpdev=$(kdump_setup_ifname $_dev)
         echo -n " ifname=$_kdumpdev:$_mac" >> ${initdir}/etc/cmdline.d/44team.conf
