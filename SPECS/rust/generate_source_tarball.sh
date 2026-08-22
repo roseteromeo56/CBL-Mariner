@@ -21,8 +21,8 @@ PARAMS=""
 while (( "$#" )); do
     case "$1" in
         --srcTarball)
-        if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
-            SRC_TARBALL=$2
+        if [ -n "$2" ] && [ "${2:0:1}" != "-" ]; then
+            SRC_TARBALL="$2"
             shift 2
         else
             echo "Error: Argument for $1 is missing" >&2
@@ -30,8 +30,8 @@ while (( "$#" )); do
         fi
         ;;
         --outFolder)
-        if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
-            OUT_FOLDER=$2
+        if [ -n "$2" ] && [ "${2:0:1}" != "-" ]; then
+            OUT_FOLDER="$2"
             shift 2
         else
             echo "Error: Argument for $1 is missing" >&2
@@ -39,8 +39,8 @@ while (( "$#" )); do
         fi
         ;;
         --pkgVersion)
-        if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
-            PKG_VERSION=$2
+        if [ -n "$2" ] && [ "${2:0:1}" != "-" ]; then
+            PKG_VERSION="$2"
             shift 2
         else
             echo "Error: Argument for $1 is missing" >&2
@@ -71,27 +71,27 @@ echo "-- create temp folder"
 tmpdir=$(mktemp -d)
 function cleanup {
     echo "+++ cleanup -> remove $tmpdir"
-    rm -rf $tmpdir
+    rm -rf "$tmpdir"
 }
 trap cleanup EXIT
 
 src_folder="$tmpdir/srcFolder"
 src_root="$src_folder/rustc-$PKG_VERSION-src"
 temp_cache="$tmpdir/cacheFolder"
-mkdir -p $src_folder
-mkdir -p $temp_cache
+mkdir -p "$src_folder"
+mkdir -p "$temp_cache"
 
-pushd $src_folder > /dev/null
+pushd "$src_folder" > /dev/null
 echo "Unpacking source tarball..."
 tar -xf -- "$SRC_TARBALL"
 popd > /dev/null
 
-pushd $src_root > /dev/null
+pushd "$src_root" > /dev/null
 echo "Fetching dependencies to a temporary cache"
 # The build environment's rust may not have all the features required to run
 # cargo fetch, so we need to use the bootstrap mode that disables some features.
 export RUSTC_BOOTSTRAP=1
-CARGO_HOME=$src_root/.cargo cargo fetch
+CARGO_HOME="$src_root/.cargo" cargo fetch
 echo "Compressing the cache."
 tar --sort=name --mtime="2021-04-26 00:00Z" \
     --owner=0 --group=0 --numeric-owner \
@@ -99,17 +99,25 @@ tar --sort=name --mtime="2021-04-26 00:00Z" \
     "$OUT_FOLDER/rustc-$PKG_VERSION-src-cargo.tar.gz" .cargo
 popd > /dev/null
 
-pushd $OUT_FOLDER > /dev/null
+pushd "$OUT_FOLDER" > /dev/null
 echo "get additional src tarballs"
 CONFIG_FILE="$src_root/src/stage0.json"
 RUST_RELEASE_DATE=$(jq -r '.compiler.date' "$CONFIG_FILE")
 RUST_STAGE0_VERSION=$(jq -r '.compiler.version' "$CONFIG_FILE")
-wget https://static.rust-lang.org/dist/$RUST_RELEASE_DATE/cargo-$RUST_STAGE0_VERSION-x86_64-unknown-linux-gnu.tar.xz
-wget https://static.rust-lang.org/dist/$RUST_RELEASE_DATE/rustc-$RUST_STAGE0_VERSION-x86_64-unknown-linux-gnu.tar.xz
-wget https://static.rust-lang.org/dist/$RUST_RELEASE_DATE/rust-std-$RUST_STAGE0_VERSION-x86_64-unknown-linux-gnu.tar.xz
-wget https://static.rust-lang.org/dist/$RUST_RELEASE_DATE/cargo-$RUST_STAGE0_VERSION-aarch64-unknown-linux-gnu.tar.xz
-wget https://static.rust-lang.org/dist/$RUST_RELEASE_DATE/rustc-$RUST_STAGE0_VERSION-aarch64-unknown-linux-gnu.tar.xz
-wget https://static.rust-lang.org/dist/$RUST_RELEASE_DATE/rust-std-$RUST_STAGE0_VERSION-aarch64-unknown-linux-gnu.tar.xz
+if [[ ! "$RUST_RELEASE_DATE" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]]; then
+    echo "Unexpected Rust release date: $RUST_RELEASE_DATE" >&2
+    exit 1
+fi
+if [[ ! "$RUST_STAGE0_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[A-Za-z0-9.]+)?$ ]]; then
+    echo "Unexpected Rust stage0 version: $RUST_STAGE0_VERSION" >&2
+    exit 1
+fi
+wget "https://static.rust-lang.org/dist/$RUST_RELEASE_DATE/cargo-$RUST_STAGE0_VERSION-x86_64-unknown-linux-gnu.tar.xz"
+wget "https://static.rust-lang.org/dist/$RUST_RELEASE_DATE/rustc-$RUST_STAGE0_VERSION-x86_64-unknown-linux-gnu.tar.xz"
+wget "https://static.rust-lang.org/dist/$RUST_RELEASE_DATE/rust-std-$RUST_STAGE0_VERSION-x86_64-unknown-linux-gnu.tar.xz"
+wget "https://static.rust-lang.org/dist/$RUST_RELEASE_DATE/cargo-$RUST_STAGE0_VERSION-aarch64-unknown-linux-gnu.tar.xz"
+wget "https://static.rust-lang.org/dist/$RUST_RELEASE_DATE/rustc-$RUST_STAGE0_VERSION-aarch64-unknown-linux-gnu.tar.xz"
+wget "https://static.rust-lang.org/dist/$RUST_RELEASE_DATE/rust-std-$RUST_STAGE0_VERSION-aarch64-unknown-linux-gnu.tar.xz"
 
 
 popd > /dev/null
@@ -118,4 +126,4 @@ echo "release date:   $RUST_RELEASE_DATE"
 echo "stage0 version: $RUST_STAGE0_VERSION"
 echo " "
 echo "Rust additional src tarballs are available at $OUT_FOLDER"
-ls -ls $OUT_FOLDER
+ls -ls "$OUT_FOLDER"
