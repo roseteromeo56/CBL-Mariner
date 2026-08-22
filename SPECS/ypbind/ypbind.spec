@@ -1,7 +1,7 @@
 Summary:        The NIS daemon which binds NIS clients to an NIS domain
 Name:           ypbind
 Version:        2.7.2
-Release:        11%{?dist}
+Release:        12%{?dist}
 License:        GPLv2
 Vendor:         Microsoft Corporation
 Distribution:   Mariner
@@ -112,6 +112,9 @@ install -m 755 %{SOURCE5} %{buildroot}%{_libexecdir}/ypbind-post-waitbind
 %doc README NEWS
 
 %changelog
+* Sat Aug 22 2026 Datadog Bits <263423550+datadog-bits@users.noreply.github.com> - 2.7.2-12
+- Quote NIS script path expansions to avoid shell word splitting
+
 * Wed Sep 20 2023 Jon Slobodzian <joslobo@microsoft.com> - 2.7.2-11
 - Recompile with stack-protection fixed gcc version (CVE-2023-4039)
 
