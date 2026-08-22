@@ -46,11 +46,11 @@ rpm() {
 
 # Installs srpm, pkg dependencies and builds pkg
 build_pkg() {
-    local PKG=("$@")
+    local PKG="$1"
     if [ -z "$PKG" ]; then echo "Please provide pkg name"; return; fi
-    rpm -ihv /mnt/INTERMEDIATE_SRPMS/$PKG*.src.rpm
+    rpm -ihv /mnt/INTERMEDIATE_SRPMS/"$PKG"*.src.rpm
     install_dependencies "$PKG"
-    rpmbuild -ba $SPECS_DIR/$PKG/$PKG.spec
+    rpmbuild -ba "$SPECS_DIR/$PKG/$PKG.spec"
 }
 
 # Show help on useful commands
