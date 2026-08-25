@@ -18,8 +18,8 @@ PARAMS=""
 while (( "$#" )); do
     case "$1" in
         --srcTarball)
-        if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
-            SRC_TARBALL=$2
+        if [ -n "$2" ] && [ "${2:0:1}" != "-" ]; then
+            SRC_TARBALL="$2"
             shift 2
         else
             echo "Error: Argument for $1 is missing" >&2
@@ -27,8 +27,8 @@ while (( "$#" )); do
         fi
         ;;
         --outFolder)
-        if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
-            OUT_FOLDER=$2
+        if [ -n "$2" ] && [ "${2:0:1}" != "-" ]; then
+            OUT_FOLDER="$2"
             shift 2
         else
             echo "Error: Argument for $1 is missing" >&2
@@ -36,8 +36,8 @@ while (( "$#" )); do
         fi
         ;;
         --pkgVersion)
-        if [ -n "$2" ] && [ ${2:0:1} != "-" ]; then
-            PKG_VERSION=$2
+        if [ -n "$2" ] && [ "${2:0:1}" != "-" ]; then
+            PKG_VERSION="$2"
             shift 2
         else
             echo "Error: Argument for $1 is missing" >&2
@@ -68,29 +68,29 @@ echo "-- create temp folder"
 TEMPDIR=$(mktemp -d)
 function cleanup {
     echo "+++ cleanup -> remove $TEMPDIR"
-    rm -rf $TEMPDIR
+    rm -rf "$TEMPDIR"
 }
 trap cleanup EXIT
 
 echo '-- Perl-XML-SAX source tarball creation'
-cd $TEMPDIR
+cd "$TEMPDIR"
 if [ -z "$SRC_TARBALL" ]; then
     echo "download source tarball"
     TARBALL_NAME="XML-SAX-$PKG_VERSION.tar.gz"
     wget "http://www.cpan.org/authors/id/G/GR/GRANTM/$TARBALL_NAME"
     SRC_TARBALL="$TEMPDIR/$TARBALL_NAME"
 fi
-tar -xzf $SRC_TARBALL
+tar -xzf "$SRC_TARBALL"
 
 # xmltest.xml could not be distributed due to copyright
-rm XML-SAX-$PKG_VERSION/testfiles/xmltest.xml
-rm XML-SAX-$PKG_VERSION/t/16large.t
-sed -i -e '/testfiles\/xmltest.xml/ d' XML-SAX-$PKG_VERSION/MANIFEST
-sed -i -e '/t\/16large.t/ d' XML-SAX-$PKG_VERSION/MANIFEST
+rm "XML-SAX-$PKG_VERSION/testfiles/xmltest.xml"
+rm "XML-SAX-$PKG_VERSION/t/16large.t"
+sed -i -e '/testfiles\/xmltest.xml/ d' "XML-SAX-$PKG_VERSION/MANIFEST"
+sed -i -e '/t\/16large.t/ d' "XML-SAX-$PKG_VERSION/MANIFEST"
 
 # make sure new tarball file does not exist and create new tarball
-NEW_TARBALL="$OUT_FOLDER/$(basename $SRC_TARBALL)"
-rm -f $NEW_TARBALL
+NEW_TARBALL="$OUT_FOLDER/$(basename "$SRC_TARBALL")"
+rm -f "$NEW_TARBALL"
 # Create a reproducible tarball
 # Credit to https://reproducible-builds.org/docs/archives/ for instructions
 # Do not update mtime value for new versions- keep the same value for ease of
@@ -99,5 +99,4 @@ echo "Create $NEW_TARBALL tarball"
 tar --sort=name --mtime="2021-11-10 00:00Z" \
     --owner=0 --group=0 --numeric-owner \
     --pax-option=exthdr.name=%d/PaxHeaders/%f,delete=atime,delete=ctime \
-    -zcf $NEW_TARBALL  XML-SAX-$PKG_VERSION
-
+    -zcf "$NEW_TARBALL"  "XML-SAX-$PKG_VERSION"
