@@ -467,7 +467,7 @@ is_wdt_mod_omitted() {
 	dracut_args=$(grep  "^dracut_args" /etc/kdump.conf)
 	[[ -z "$dracut_args" ]] && return "$ret"
 
-	eval set -- $dracut_args
+	eval set -- "$dracut_args"
 	while :; do
 		[[ -z $1 ]] && break
 		case $1 in
