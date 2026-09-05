@@ -358,7 +358,7 @@ kdump_install_net() {
         kdump_setup_znet $_netdev
     fi
 
-    _static=$(kdump_static_ip $_netdev $_srcaddr)
+    _static=$(kdump_static_ip "$_netdev" "$_srcaddr")
     if [ -n "$_static" ]; then
         _proto=none
     elif is_ipv6_address $_srcaddr; then
