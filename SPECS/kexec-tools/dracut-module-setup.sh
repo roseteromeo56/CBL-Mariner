@@ -706,7 +706,7 @@ get_pcs_fence_kdump_nodes() {
         eval $node
         nodename=$uname
         # Skip its own node name
-        if is_localhost $nodename; then
+        if is_localhost "$nodename"; then
             continue
         fi
         nodes="$nodes $nodename"
