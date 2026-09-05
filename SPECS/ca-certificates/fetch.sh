@@ -131,19 +131,19 @@ fi
 echo "Updating .spec file"
 cat ca-certificates.spec | while IFS= read -r line
 do
-    echo $line | grep "^Version: " 1>&2
+    echo "$line" | grep "^Version: " 1>&2
     if [ $? -eq 0 ]; then
 	echo "Version: ${version}"
 	echo "New Version: ${version}" 1>&2
 	continue
     fi
-    echo $line | grep "^Release: " 1>&2
+    echo "$line" | grep "^Release: " 1>&2
     if [ $?  -eq 0 ]; then
 	echo "Release: ${release}%{?dist}"
 	echo "New Release: ${release}%{?dist}" 1>&2
 	continue
     fi
-    echo $line | grep "^%changelog" 1>&2
+    echo "$line" | grep "^%changelog" 1>&2
     if [ $?  -eq 0 ]; then
 	echo "$line"
 	echo -e "*${log_date} ${name} <$email> ${version}-${release}\n - Update to CKBI ${ckbi_version} from NSS ${nss_version}"
