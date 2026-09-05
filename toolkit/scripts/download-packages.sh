@@ -19,16 +19,16 @@ function get_packages {
 function make_tarball {
     archive_name=rpms.tar.gz
 
-    for package_type in $packages_types; do
-        mkdir -p RPMS/$package_type
-        mv -- *.$package_type.rpm RPMS/$package_type/
+    for package_type in "${package_types[@]}"; do
+        mkdir -p "RPMS/$package_type"
+        mv -- *."$package_type".rpm "RPMS/$package_type/"
     done
 
     mkdir -p RPMS/noarch
     mv -- *.noarch.rpm RPMS/noarch/
 
     echo "-- Packaging into a tarball..."
-    tar --remove-files -czvf $archive_name RPMS
+    tar --remove-files -czvf "$archive_name" RPMS
 }
 
 function help {
@@ -42,7 +42,7 @@ function help {
 }
 
 repository_url=
-packages_types=
+package_types=()
 directories=
 tar_packages=0
 
@@ -50,18 +50,25 @@ while getopts "d:ht:u:z" OPTIONS; do
     case ${OPTIONS} in
         d ) directories="$OPTARG" ;;
         h ) help; exit 0 ;;
-        t ) packages_types="$OPTARG" ;;
+        t ) read -r -a package_types <<< "$OPTARG" ;;
         u ) repository_url=$OPTARG ;;
         z ) tar_packages=1 ;;
         ? ) echo -e "ERROR: INVALID OPTION.\n\n"; help; exit 1 ;;
     esac
 done
 
-if [[ -z "$directories" ]] || [[ -z "$packages_types" ]] || [[ -z "$repository_url" ]]; then
+if [[ -z "$directories" ]] || [[ ${#package_types[@]} -eq 0 ]] || [[ -z "$repository_url" ]]; then
     echo -e "ERROR: Arguments '-d', '-t' and '-u' are mandatory!\n\n"
     help
     exit 2
 fi
+
+for package_type in "${package_types[@]}"; do
+    case "$package_type" in
+        x86_64|aarch64|srpms) ;;
+        *) echo "ERROR: Invalid package type '$package_type'. Valid types are: x86_64 aarch64 srpms"; exit 2 ;;
+    esac
+done
 
 # Remove trailing directory separator, if any
 if [[ $repository_url =~ ^.+/$ ]]; then
@@ -75,7 +82,7 @@ before_run=$(date +%s)
 # Iterate over directories and types, downloading the files
 for directory in $directories; do
     echo "-- Downloading directory $directory..."
-    for package_type in $packages_types; do
+    for package_type in "${package_types[@]}"; do
         echo "-- Downloading type $package_type for directory $directory..."
 
         # If these are from 1.0 and are not srpms, there is an additional directory to skip
