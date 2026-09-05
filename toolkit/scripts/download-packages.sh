@@ -20,7 +20,7 @@ function make_tarball {
     archive_name=rpms.tar.gz
 
     for package_type in $packages_types; do
-        mkdir -p RPMS/$package_type
+        mkdir -p "RPMS/$package_type"
         mv -- *.$package_type.rpm RPMS/$package_type/
     done
 
