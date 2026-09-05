@@ -470,6 +470,7 @@ default_dump_target_install_conf()
 #install kdump.conf and what user specifies in kdump.conf
 kdump_install_conf() {
     local _opt _val _pdev
+    local -a _extra_bins
     (read_strip_comments /etc/kdump.conf) > ${initdir}/tmp/$$-kdump.conf
 
     while read _opt _val;
@@ -492,8 +493,12 @@ kdump_install_conf() {
                 kdump_install_net "$(get_dracut_args_target "$_val")"
             fi
             ;;
-        kdump_pre|kdump_post|extra_bins)
-            dracut_install $_val
+        kdump_pre|kdump_post)
+            dracut_install "$_val"
+            ;;
+        extra_bins)
+            read -r -a _extra_bins <<< "$_val"
+            dracut_install "${_extra_bins[@]}"
             ;;
         core_collector)
             dracut_install "${_val%%[[:blank:]]*}"
