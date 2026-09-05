@@ -143,7 +143,7 @@ function update_toolchain_pkglist {
         file=$PKGLIST_FOLDER/$pkg
         PATTERN="kernel-headers-.*"
         REPLACE="kernel-headers-$VERSION-1.cm2.noarch.rpm"
-        sed -i "s/$PATTERN/$REPLACE/" $file
+        sed -i "s/$PATTERN/$REPLACE/" "$file"
     done
 }
 
