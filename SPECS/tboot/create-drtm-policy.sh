@@ -8,12 +8,12 @@ echo "3. Create the policy element for the platform configuration (pconf)"
 pcr0=$(sudo tpm2_pcrread | grep '0 :' | sed -n '2 p' | cut -c 9-)
 pcr1=$(sudo tpm2_pcrread | grep '1 :' | sed -n '2 p' | cut -c 9-)
 
-echo ${pcr0}
-echo ${pcr1}
+echo "${pcr0}"
+echo "${pcr1}"
 
 sudo lcp2_crtpolelt --create --type pconf2 --ctrl 0x00 --alg sha256 \
-    --pcr0 ${pcr0} \
-    --pcr1 ${pcr1} \
+    --pcr0 "${pcr0}" \
+    --pcr1 "${pcr1}" \
     --out pconf2.elt
 
 echo "4. Create the unsigned policy list file list_unsig.lst, using mle_elt and pconf_elt"
@@ -37,13 +37,13 @@ KERNEL_CMD_LINE=$(cat /proc/cmdline | cut -d ' ' -f 1 --complement)
 KERNEL_IMG=$(ls /boot/ | grep vmlinuz | head -n1)
 INITRD_IMG=$(ls /boot/ | grep initrd | head -n1)
 
-echo ${KERNEL_CMD_LINE}
-echo ${KERNEL_IMG}
-echo ${INITRD_IMG}
+echo "${KERNEL_CMD_LINE}"
+echo "${KERNEL_IMG}"
+echo "${INITRD_IMG}"
 
 sudo tb_polgen --add --num 0 --pcr none --hash image --cmdline "logging=serial,memory" --image /boot/tboot.gz vl.pol
-sudo tb_polgen --add --num 1 --pcr 19 --hash image --cmdline "$KERNEL_CMD_LINE" --image /boot/${KERNEL_IMG} vl.pol
-sudo tb_polgen --add --num 2 --pcr 19 --hash image --cmdline "" --image /boot/${INITRD_IMG} vl.pol
+sudo tb_polgen --add --num 1 --pcr 19 --hash image --cmdline "$KERNEL_CMD_LINE" --image "/boot/${KERNEL_IMG}" vl.pol
+sudo tb_polgen --add --num 2 --pcr 19 --hash image --cmdline "" --image "/boot/${INITRD_IMG}" vl.pol
 
 echo "8. Create the TPM NV Index for the LCP"
 sudo tpm2_nvdefine 0x1c10106 -C o -s 70 -a 0x204000A
