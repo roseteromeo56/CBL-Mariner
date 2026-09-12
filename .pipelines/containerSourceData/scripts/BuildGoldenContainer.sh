@@ -266,6 +266,10 @@ function prepare_docker_directory {
 }
 
 function docker_build {
+    local -a dockerBuildArgs
+
+    read -r -a dockerBuildArgs <<< "$DOCKER_BUILD_ARGS"
+
     echo "+++ Build container"
     pushd "$WORK_DIR" > /dev/null
     echo " docker build command"
@@ -277,7 +281,7 @@ function docker_build {
     "-f $WORK_DIR/Dockerfile ."
 
     echo ""
-    docker buildx build $DOCKER_BUILD_ARGS \
+    docker buildx build "${dockerBuildArgs[@]}" \
         --build-arg BASE_IMAGE="$BASE_IMAGE_NAME_FULL" \
         --build-arg RPMS_TO_INSTALL="$PACKAGES_TO_INSTALL" \
         -t "$GOLDEN_IMAGE_NAME" --no-cache --progress=plain \
