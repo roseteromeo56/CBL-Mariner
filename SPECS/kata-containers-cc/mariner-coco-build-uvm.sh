@@ -28,7 +28,7 @@ export KERNEL_MODULES_DIR=${SCRIPT_DIR}/modules/${KERNEL_MODULES_VER}
 # copy kernel modules to rootfs
 cp -a ${KERNEL_MODULES_DIR} "${MODULE_ROOTFS_DEST_DIR}/"
 # run depmod
-depmod -a -b ${ROOTFS_DIR} ${KERNEL_MODULES_VER}
+depmod -a -b "${ROOTFS_DIR}" "${KERNEL_MODULES_VER}"
 popd
 
 # Install other services.

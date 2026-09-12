@@ -408,8 +408,8 @@ kdump_install_net() {
     # gateway.
     if [ ! -f ${initdir}/etc/cmdline.d/60kdumpnic.conf ] &&
        [ ! -f ${initdir}/etc/cmdline.d/70bootdev.conf ]; then
-        echo "kdumpnic=$(kdump_setup_ifname $_netdev)" > ${initdir}/etc/cmdline.d/60kdumpnic.conf
-        echo "bootdev=$(kdump_setup_ifname $_netdev)" > ${initdir}/etc/cmdline.d/70bootdev.conf
+        echo "kdumpnic=$(kdump_setup_ifname "$_netdev")" > ${initdir}/etc/cmdline.d/60kdumpnic.conf
+        echo "bootdev=$(kdump_setup_ifname "$_netdev")" > ${initdir}/etc/cmdline.d/70bootdev.conf
     fi
 }
 
