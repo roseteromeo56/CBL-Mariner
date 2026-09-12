@@ -325,15 +325,15 @@ start_record_timestamp "build prep"
 echo Setting up initial chroot to build pass1 toolchain RPMs from SPECs
 
 # Configure rpm macros
-mkdir -pv $LFS/usr/etc/rpm
-cp -v $SPECROOT/mariner-rpm-macros/macros $LFS/usr/etc/rpm/macros
-mkdir -pv $LFS/usr/lib/rpm/mariner
-cp -v $SPECROOT/mariner-rpm-macros/gen-ld-script.sh $LFS/usr/lib/rpm/mariner/gen-ld-script.sh
-cp -v $SPECROOT/mariner-rpm-macros/generate-package-note.py $LFS/usr/lib/rpm/mariner/generate-package-note.py
-cp -v $SPECROOT/mariner-rpm-macros/verify-package-notes.sh $LFS/usr/lib/rpm/mariner/verify-package-notes.sh
-mkdir -pv $LFS/usr/lib/rpm/macros.d
-cp -v $MARINER_TOOLCHAIN_MANIFESTS_DIR/macros.override $LFS/usr/lib/rpm/macros.d/macros.override
-cp /etc/resolv.conf $LFS/etc/
+mkdir -pv "$LFS/usr/etc/rpm"
+cp -v "$SPECROOT/mariner-rpm-macros/macros" "$LFS/usr/etc/rpm/macros"
+mkdir -pv "$LFS/usr/lib/rpm/mariner"
+cp -v "$SPECROOT/mariner-rpm-macros/gen-ld-script.sh" "$LFS/usr/lib/rpm/mariner/gen-ld-script.sh"
+cp -v "$SPECROOT/mariner-rpm-macros/generate-package-note.py" "$LFS/usr/lib/rpm/mariner/generate-package-note.py"
+cp -v "$SPECROOT/mariner-rpm-macros/verify-package-notes.sh" "$LFS/usr/lib/rpm/mariner/verify-package-notes.sh"
+mkdir -pv "$LFS/usr/lib/rpm/macros.d"
+cp -v "$MARINER_TOOLCHAIN_MANIFESTS_DIR/macros.override" "$LFS/usr/lib/rpm/macros.d/macros.override"
+cp /etc/resolv.conf "$LFS/etc/"
 
 chroot_and_print_installed_rpms
 
