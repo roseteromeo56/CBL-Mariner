@@ -146,7 +146,7 @@ kdump_handle_mulitpath_route() {
     local _netdev="$1" _srcaddr="$2" _ipv6_flag
     local _target _nexthop _route _weight _max_weight _rule
 
-    if is_ipv6_address $_srcaddr; then
+    if is_ipv6_address "$_srcaddr"; then
         _ipv6_flag="-6"
     fi
 
