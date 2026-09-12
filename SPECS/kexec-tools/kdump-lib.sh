@@ -128,7 +128,7 @@ get_user_configured_dump_disk()
     [ -n "$_target" ] && echo $_target && return
 
     _target=$(get_dracut_args_target "$(grep "^dracut_args .*\-\-mount" /etc/kdump.conf)")
-    [ -b "$_target" ] && echo $_target
+    [ -b "$_target" ] && printf '%s\n' "$_target"
 }
 
 get_root_fs_device()
