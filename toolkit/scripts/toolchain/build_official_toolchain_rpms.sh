@@ -149,21 +149,21 @@ blocking_unmount () {
         return
     fi
 
-    umount -l $1 || true
-    while mountpoint -q $1; do
-        echo $1 is still busy...
+    umount -l "$1" || true
+    while mountpoint -q "$1"; do
+        echo "$1 is still busy..."
         sleep 1
-        umount -l $1 || true
+        umount -l "$1" || true
     done
 }
 
 chroot_unmount () {
     echo "Unmounting chroot"
-    blocking_unmount $LFS/dev/pts
-    blocking_unmount $LFS/dev
-    blocking_unmount $LFS/run
-    blocking_unmount $LFS/proc
-    blocking_unmount $LFS/sys
+    blocking_unmount "$LFS/dev/pts"
+    blocking_unmount "$LFS/dev"
+    blocking_unmount "$LFS/run"
+    blocking_unmount "$LFS/proc"
+    blocking_unmount "$LFS/sys"
 }
 
 chroot_and_print_installed_rpms () {
