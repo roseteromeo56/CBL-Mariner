@@ -712,7 +712,7 @@ get_pcs_fence_kdump_nodes() {
         nodes="$nodes $nodename"
     done
 
-    echo $nodes
+    printf '%s\n' "${nodes# }"
 }
 
 # retrieves fence_kdump args from config file
