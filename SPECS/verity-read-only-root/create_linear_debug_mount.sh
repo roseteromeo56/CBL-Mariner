@@ -20,7 +20,7 @@ dmsetup suspend $VERITY_NAME
 dmsetup create $VERITY_NAME-RW --table "0 $SIZE linear $DATA_DEV 0"
 
 # Mount it
-mount /dev/mapper/$VERITY_NAME-RW /mnt/verity_writable_debug
+mount "/dev/mapper/${VERITY_NAME}-RW" /mnt/verity_writable_debug
 echo "Writable root is now avialable at /mnt/verity_writable_debug"
 echo "WARNING: /dev/mapper/$VERITY_NAME is still frozen, system may hang unexpectedly until it is resumed"
 echo "    run 'dmsetup resume $VERITY_NAME' to unfreeze"
