@@ -352,7 +352,7 @@ kdump_install_net() {
     _route=$(kdump_get_ip_route $_destaddr)
     _srcaddr=$(kdump_get_ip_route_field "$_route" "src")
     _netdev=$(kdump_get_ip_route_field "$_route" "dev")
-    _netmac=$(kdump_get_mac_addr $_netdev)
+    _netmac=$(kdump_get_mac_addr "$_netdev")
 
     if [ "$(uname -m)" = "s390x" ]; then
         kdump_setup_znet $_netdev
