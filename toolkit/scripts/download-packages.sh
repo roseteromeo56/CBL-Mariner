@@ -66,7 +66,7 @@ fi
 # Remove trailing directory separator, if any
 if [[ $repository_url =~ ^.+/$ ]]; then
     echo "-- Removing trailing directory separator from $repository_url"
-    repository_url=`echo $repository_url | head -c -2`
+    repository_url="${repository_url%/}"
 fi
 
 # For benchmark purposes
