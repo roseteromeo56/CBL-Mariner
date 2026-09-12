@@ -51,7 +51,7 @@ echo List of net devices:
 for (( i=0; i < $eth_cnt; i++ ))
 do
 	list_mac[$i]=`cat $sysdir/${list_eth[$i]}/address`
-	echo ${list_eth[$i]}, ${list_mac[$i]}
+	echo "${list_eth[$i]}, ${list_mac[$i]}"
 done
 
 # Find NIC with matching MAC
