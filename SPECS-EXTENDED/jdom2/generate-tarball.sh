@@ -21,6 +21,6 @@ tar --sort=name \
     --mtime="2021-04-26 00:00Z" \
     --owner=0 --group=0 --numeric-owner \
     --pax-option=exthdr.name=%d/PaxHeaders/%f,delete=atime,delete=ctime \
-    -cf "../${name}-${version}.tar.gz" *
+    -cf "../${name}-${version}.tar.gz" -- *
 popd
 rm -r tarball-tmp "${name}-${version}.orig.tar.gz"
