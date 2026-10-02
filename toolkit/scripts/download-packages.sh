@@ -73,7 +73,8 @@ fi
 before_run=$(date +%s)
 
 # Iterate over directories and types, downloading the files
-for directory in $directories; do
+read -r -a directory_list <<< "$directories"
+for directory in "${directory_list[@]}"; do
     echo "-- Downloading directory $directory..."
     for package_type in $packages_types; do
         echo "-- Downloading type $package_type for directory $directory..."
