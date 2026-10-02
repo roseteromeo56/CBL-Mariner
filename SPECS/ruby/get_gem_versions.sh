@@ -17,7 +17,7 @@ PAD_SIZE=23 # (Manually calculated based on the length of '%global error_highlig
 
 # Grab the 'rubygems' field seperately
 curl https://stdgems.org/default_gems.json 2>/dev/null                | \
-jq  '.gems[] | [.gem, .versions["'$RUBY_VER'"]] | select(.[0]=="rubygems")' | \
+jq  --arg ruby_ver "$RUBY_VER" '.gems[] | [.gem, .versions[$ruby_ver]] | select(.[0]=="rubygems")' | \
 jq -r '.[0], .[1]'                                                    | \
 xargs printf '%%global %s_version %s\n'                               | \
 xargs printf "%s %-${PAD_SIZE}s %s\n"
@@ -33,7 +33,7 @@ printf '# A helpful one-liner script to check the current default versions is av
 # - add '%global' and '_version' to each pkg
 # - fix spacing
 curl https://stdgems.org/default_gems.json 2>/dev/null                | \
-jq  '.gems[] | [.gem, .versions["'$RUBY_VER'"]] | select(.[1]!=null and .[0]!="rubygems")' | \
+jq  --arg ruby_ver "$RUBY_VER" '.gems[] | [.gem, .versions[$ruby_ver]] | select(.[1]!=null and .[0]!="rubygems")' | \
 jq -r '.[0], .[1]'                                                    | \
 tr '-' '_'                                                            | \
 paste -d " " - -                                                      | \
