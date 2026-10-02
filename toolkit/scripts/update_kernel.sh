@@ -14,14 +14,14 @@ function copy_local_tarball { dd/fix/quote-kernel-update-expansions
 
 # $1 = spec name
 function remove_local_tarball {
-    rm $WORKSPACE/SPECS/$1/$TARBALL_NAME
+    rm -- "$WORKSPACE/SPECS/$1/$TARBALL_NAME"
 }
 
 function clean {
     rm -rf $TMPDIR
     for spec in $SPECS
     do
-        remove_local_tarball $spec
+        remove_local_tarball "$spec"
     done
 }
 
