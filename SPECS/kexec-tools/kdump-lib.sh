@@ -49,7 +49,7 @@ is_nfs_dump_target()
     fi
 
     local _save_path=$(get_save_path)
-    local _target=$(get_target_from_path $_save_path)
+    local _target=$(get_target_from_path "$_save_path")
     local _fstype=$(get_fs_type_from_target $_target)
 
     if is_fs_type_nfs $_fstype; then
