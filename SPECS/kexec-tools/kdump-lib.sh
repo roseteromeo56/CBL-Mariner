@@ -128,7 +128,7 @@ get_user_configured_dump_disk()
     [ -n "$_target" ] && echo $_target && return
 
     _target=$(get_dracut_args_target "$(grep "^dracut_args .*\-\-mount" /etc/kdump.conf)")
-    [ -b "$_target" ] && echo $_target
+    [ -b "$_target" ] && printf '%s\n' "$_target"
 }
 
 get_root_fs_device()
@@ -159,7 +159,7 @@ get_block_dump_target()
     # Get block device name from local save path
     _path=$(get_save_path)
     _target=$(get_target_from_path $_path)
-    [ -b "$_target" ] && echo $(to_dev_name $_target)
+    [ -b "$_target" ] && echo "$(to_dev_name "$_target")"
 }
 
 is_dump_to_rootfs()

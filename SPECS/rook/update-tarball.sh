@@ -33,8 +33,8 @@ function on_err {
     set +Eeuo pipefail
     echo "ERROR: previous command has failed"
     echo "Removing archives."
-    rm -f $PKG_DIR/rook-$VERSION.tar.xz
-    rm -f $PKG_DIR/rook-$VERSION-vendor.tar.xz
+    rm -f "$PKG_DIR/rook-$VERSION.tar.xz"
+    rm -f "$PKG_DIR/rook-$VERSION-vendor.tar.xz"
     exit $code
 }
 trap on_err ERR
