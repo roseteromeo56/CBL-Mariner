@@ -146,7 +146,7 @@ kdump_handle_mulitpath_route() {
     local _netdev="$1" _srcaddr="$2" _ipv6_flag
     local _target _nexthop _route _weight _max_weight _rule
 
-    if is_ipv6_address $_srcaddr; then
+    if is_ipv6_address "$_srcaddr"; then
         _ipv6_flag="-6"
     fi
 
@@ -352,7 +352,7 @@ kdump_install_net() {
     _route=$(kdump_get_ip_route $_destaddr)
     _srcaddr=$(kdump_get_ip_route_field "$_route" "src")
     _netdev=$(kdump_get_ip_route_field "$_route" "dev")
-    _netmac=$(kdump_get_mac_addr $_netdev)
+    _netmac=$(kdump_get_mac_addr "$_netdev")
 
     if [ "$(uname -m)" = "s390x" ]; then
         kdump_setup_znet $_netdev
@@ -408,8 +408,8 @@ kdump_install_net() {
     # gateway.
     if [ ! -f ${initdir}/etc/cmdline.d/60kdumpnic.conf ] &&
        [ ! -f ${initdir}/etc/cmdline.d/70bootdev.conf ]; then
-        echo "kdumpnic=$(kdump_setup_ifname $_netdev)" > ${initdir}/etc/cmdline.d/60kdumpnic.conf
-        echo "bootdev=$(kdump_setup_ifname $_netdev)" > ${initdir}/etc/cmdline.d/70bootdev.conf
+        echo "kdumpnic=$(kdump_setup_ifname "$_netdev")" > ${initdir}/etc/cmdline.d/60kdumpnic.conf
+        echo "bootdev=$(kdump_setup_ifname "$_netdev")" > ${initdir}/etc/cmdline.d/70bootdev.conf
     fi
 }
 

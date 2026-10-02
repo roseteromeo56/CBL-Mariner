@@ -39,7 +39,7 @@ echo $driverlist $extradrivers | xargs -n1 $pkg co $branch
 for i in xorg-x11-drv-*/ ; do
     [ -e $i/dead.package ] && continue
     pushd $i
-    rpmdev-bumpspec -c "- 1.15 ABI rebuild" *.spec
+    rpmdev-bumpspec -c "- 1.15 ABI rebuild" ./*.spec
     $pkg commit -c -p && $pkg build --nowait
     #$pkg mockbuild
     #$pkg srpm
@@ -50,5 +50,4 @@ for i in xorg-x11-drv-*/ ; do
 done
 
 popd
-
 
