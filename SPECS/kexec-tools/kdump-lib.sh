@@ -159,7 +159,7 @@ get_block_dump_target()
     # Get block device name from local save path
     _path=$(get_save_path)
     _target=$(get_target_from_path $_path)
-    [ -b "$_target" ] && echo $(to_dev_name $_target)
+    [ -b "$_target" ] && echo "$(to_dev_name "$_target")"
 }
 
 is_dump_to_rootfs()

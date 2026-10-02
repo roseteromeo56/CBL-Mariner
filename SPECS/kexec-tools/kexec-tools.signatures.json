@@ -18,8 +18,9 @@
   "fadump-howto.txt": "b9090c3e0e26b6124a0c8b0c79a7adf10637c9bbc34e0a59529e3f1b66c074f0",
   "kdump-dep-generator.sh": "f660e26df9c4843340093a294bcd41a68a71cea48314b5d1a3553bba5038bbbc",
   "kdump-in-cluster-environment.txt": "50784977e2c3a425ae00de4831f9fd4fb4a04574db1a72b9b28f7c0979a52564",
-  "kdump-lib-initramfs.sh": "a031d1318e81ea3636213b364aa37ea5efa76e797cdb25947da121967f0aee06",
-  "kdump-lib.sh": "11900e454ef93b4b0b4c76290d08a6b08fff56a33b3116d3367c50d13e48023f",
+  "kdump-lib-initramfs.sh": "a031d1318e81ea3636213b364aa37ea5efa76e797cdb25947da121967f0aee06", dd/automation/security/quote-kdump-block-target-20260912
+  "kdump-lib.sh": "d3a83e50d52d2444ae19a6d8a251695b736332c8c79478efc1f5d60e01805382",
+  "kdump-lib.sh": "11900e454ef93b4b0b4c76290d08a6b08fff56a33b3116d3367c50d13e48023f", 2.0
   "kdump-udev-throttler": "125d538a59172f779b40ea32fea1e4eb50d849f25eb2537a48328d4401136679",
   "kdump.conf": "1d7ed03fa55f52047a6be4047cb2bfea08ac025b82d52ace86d69e2ec06e2ce7",
   "kdump.conf.5": "bab6c7b171f76e8c6df91bb7db852815caacbc3cd3d4309a1dc58d36950440e4",
