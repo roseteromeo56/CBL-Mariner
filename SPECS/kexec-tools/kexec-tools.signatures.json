@@ -9,6 +9,7 @@
   "dracut-kdump-error-handler.service": "d5cd3a6cce04955a07ae5cd7790ae17365b90a4989f1888d7b7f487316a1544d",
   "dracut-kdump-error-handler.sh": "23bb509940a9ecc3944bb88526b974f49cfb7d6c133fe11615d8d4604141e4c9",
   "dracut-kdump.sh": "733594d1c5ab4928af7c361426cb485264a7505c68ff7b906e8ea30f7eb69509",
+  "dracut-module-setup.sh": "2134d3346a1d79e4fda49020ee03b24d24185f13569c7ac9280c28a07ea439f2",
  dd/automation/fix/kdump-node-list-quoting-20260912
   "dracut-module-setup.sh": "5dad6181ed12a609af1db31ac89c7b3bf9edfeb50dd74c21310591319b6af111",
   "dracut-module-setup.sh": "550562cf30b1cbebd788f0861852845c4f2ddd22bfc15161c333144772946bc1", 2.0

@@ -407,8 +407,9 @@ kdump_install_net() {
     # call kdump_install_net again and we don't want eth1 to be the default
     # gateway.
     if [ ! -f ${initdir}/etc/cmdline.d/60kdumpnic.conf ] &&
-       [ ! -f ${initdir}/etc/cmdline.d/70bootdev.conf ]; then
-        echo "kdumpnic=$(kdump_setup_ifname "$_netdev")" > ${initdir}/etc/cmdline.d/60kdumpnic.conf
+       [ ! -f ${initdir}/etc/cmdline.d/70bootdev.conf ]; then dd/automation/fix/kdump-bootdev-quoting-3d565d87
+        echo "kdumpnic=$(kdump_setup_ifname $_netdev)" > ${initdir}/etc/cmdline.d/60kdumpnic.conf
+        echo "kdumpnic=$(kdump_setup_ifname "$_netdev")" > ${initdir}/etc/cmdline.d/60kdumpnic.conf 2.0
         echo "bootdev=$(kdump_setup_ifname "$_netdev")" > ${initdir}/etc/cmdline.d/70bootdev.conf
     fi
 }
