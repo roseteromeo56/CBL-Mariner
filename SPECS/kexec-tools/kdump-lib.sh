@@ -49,7 +49,7 @@ is_nfs_dump_target()
     fi
 
     local _save_path=$(get_save_path)
-    local _target=$(get_target_from_path $_save_path)
+    local _target=$(get_target_from_path "$_save_path")
     local _fstype=$(get_fs_type_from_target $_target)
 
     if is_fs_type_nfs $_fstype; then
@@ -128,7 +128,7 @@ get_user_configured_dump_disk()
     [ -n "$_target" ] && echo $_target && return
 
     _target=$(get_dracut_args_target "$(grep "^dracut_args .*\-\-mount" /etc/kdump.conf)")
-    [ -b "$_target" ] && echo $_target
+    [ -b "$_target" ] && printf '%s\n' "$_target"
 }
 
 get_root_fs_device()
@@ -159,7 +159,7 @@ get_block_dump_target()
     # Get block device name from local save path
     _path=$(get_save_path)
     _target=$(get_target_from_path $_path)
-    [ -b "$_target" ] && echo $(to_dev_name $_target)
+    [ -b "$_target" ] && echo "$(to_dev_name "$_target")"
 }
 
 is_dump_to_rootfs()
@@ -346,13 +346,15 @@ get_remote_host()
 }
 
 is_hostname()
-{
+{ dd/automation/fix/kdump-hostname-quoting-20260905
     local _hostname=`echo "$1" | grep ":"`
+    local _hostname=`printf '%s\n' "$1" | grep ":"` 2.0
 
     if [ -n "$_hostname" ]; then
         return 1
-    fi
+    fi dd/automation/fix/kdump-hostname-quoting-20260905
     echo "$1" | grep -q "[a-zA-Z]"
+    printf '%s\n' "$1" | grep -q "[a-zA-Z]" 2.0
 }
 
 # Copied from "/etc/sysconfig/network-scripts/network-functions"
@@ -467,7 +469,7 @@ is_wdt_mod_omitted() {
 	dracut_args=$(grep  "^dracut_args" /etc/kdump.conf)
 	[[ -z "$dracut_args" ]] && return "$ret"
 
-	eval set -- $dracut_args
+	eval set -- "$dracut_args"
 	while :; do
 		[[ -z $1 ]] && break
 		case $1 in
