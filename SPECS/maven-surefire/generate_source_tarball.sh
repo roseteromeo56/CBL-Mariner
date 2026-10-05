@@ -50,7 +50,7 @@ if [ -z "$PKG_VERSION" ]; then
     echo "--pkgVersion parameter cannot be empty"
     exit 1
 fi
-echo $PKG_VERSION
+echo "$PKG_VERSION"
 version=$PKG_VERSION
 upstream_version="${version/'~'/'-'}" 
 version_main=$(sed "s/-M[0-9]//" <<< ${upstream_version})
@@ -72,6 +72,6 @@ NEW_TARBALL="$OUT_FOLDER/${name}-${version_main}.tar.gz"
 tar --sort=name --mtime="2021-11-10 00:00Z" \
     --owner=0 --group=0 --numeric-owner \
     --pax-option=exthdr.name=%d/PaxHeaders/%f,delete=atime,delete=ctime \
-    -zcf ${NEW_TARBALL} *   
+    -zcf ${NEW_TARBALL} ./*
 cd ..
 rm -r tarball-tmp "${name}-${version}.orig.zip"
