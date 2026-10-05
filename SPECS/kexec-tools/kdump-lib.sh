@@ -346,13 +346,15 @@ get_remote_host()
 }
 
 is_hostname()
-{
-    local _hostname=`printf '%s\n' "$1" | grep ":"`
+{ dd/automation/fix/kdump-hostname-quoting-20260905
+    local _hostname=`echo "$1" | grep ":"`
+    local _hostname=`printf '%s\n' "$1" | grep ":"` 2.0
 
     if [ -n "$_hostname" ]; then
         return 1
-    fi
-    printf '%s\n' "$1" | grep -q "[a-zA-Z]"
+    fi dd/automation/fix/kdump-hostname-quoting-20260905
+    echo "$1" | grep -q "[a-zA-Z]"
+    printf '%s\n' "$1" | grep -q "[a-zA-Z]" 2.0
 }
 
 # Copied from "/etc/sysconfig/network-scripts/network-functions"
