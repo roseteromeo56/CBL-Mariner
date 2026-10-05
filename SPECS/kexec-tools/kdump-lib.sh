@@ -347,12 +347,12 @@ get_remote_host()
 
 is_hostname()
 {
-    local _hostname=`echo $1 | grep ":"`
+    local _hostname=`printf '%s\n' "$1" | grep ":"`
 
     if [ -n "$_hostname" ]; then
         return 1
     fi
-    echo $1 | grep -q "[a-zA-Z]"
+    printf '%s\n' "$1" | grep -q "[a-zA-Z]"
 }
 
 # Copied from "/etc/sysconfig/network-scripts/network-functions"
