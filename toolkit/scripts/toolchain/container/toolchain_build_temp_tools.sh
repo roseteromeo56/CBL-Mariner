@@ -495,7 +495,7 @@ sh Configure -des -Dprefix=/tools -Dlibs=-lm -Uloclibpth -Ulocincpth
 # Using locally-built version of 'make' to avoid mismatch between the build machine's version
 # and the version we've built above. During its build, Perl runs 'make' from within its 'Makefile', so
 # we used to end up with the build machine's 4.2.1 version running a 4.3 version causing build errors.
-/tools/bin/make -j$(nproc)
+/tools/bin/make -j"$(nproc)"
 cp -v perl cpan/podlators/scripts/pod2man /tools/bin
 mkdir -pv /tools/lib/perl5/5.32.0
 cp -Rv lib/* /tools/lib/perl5/5.32.0
