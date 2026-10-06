@@ -259,7 +259,7 @@ kdump_setup_team() {
     local _team_conf="${initdir}/tmp/$$-$_netdev.conf"
     for _dev in `teamnl "$_netdev" ports | awk -F':' '{print $2}'`; do
         _mac=$(kdump_get_perm_addr $_dev)
-        _kdumpdev=$(kdump_setup_ifname $_dev)
+        _kdumpdev=$(kdump_setup_ifname "$_dev")
         echo -n " ifname=$_kdumpdev:$_mac" >> ${initdir}/etc/cmdline.d/44team.conf
         _slaves+="$_kdumpdev,"
     done
