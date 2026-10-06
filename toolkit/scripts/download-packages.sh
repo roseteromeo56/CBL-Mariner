@@ -18,10 +18,13 @@ function get_packages {
 
 function make_tarball {
     archive_name=rpms.tar.gz
-
+ dd/automation/security/quote-package-path-20260905-dab351d0
+    for package_type in $packages_types; do
+        mkdir -p "RPMS/$package_type"
+        mv -- *.$package_type.rpm RPMS/$package_type/
     for package_type in "${package_types[@]}"; do
         mkdir -p "RPMS/$package_type"
-        mv -- *."$package_type".rpm "RPMS/$package_type/"
+        mv -- *."$package_type".rpm "RPMS/$package_type/" 2.0
     done
 
     mkdir -p RPMS/noarch
