@@ -39,7 +39,7 @@ function filter_packages {
         done
 
         # Run a more advanced query again to work correctly when doing a -p run
-        echo "Left:" $(find "$rpms_directory" -name "$name_search" | sort -V -r | awk '{print}' ORS=' ' | cut -d' ' -f1 )
+        echo "Left:" "$(find "$rpms_directory" -name "$name_search" | sort -V -r | awk '{print}' ORS=' ' | cut -d' ' -f1 )"
         echo #newline
     done
 }
