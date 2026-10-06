@@ -141,7 +141,7 @@ install_dependencies() {
     if [ -z "$PKG" ]; then echo "Please provide pkg name"; return; fi
     echo "-------- installing build dependencies ---------"
     spec_file=$SPECS_DIR/$PKG/$PKG.spec
-    dep_list=$(grep "BuildRequires:" $spec_file | cut -d ':' -f 2)
+    dep_list=$(grep "BuildRequires:" "$spec_file" | cut -d ':' -f 2)
     for dependency in $dep_list
     do
         tdnf install -y $dependency 2>&1
