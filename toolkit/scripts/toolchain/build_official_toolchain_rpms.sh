@@ -136,11 +136,11 @@ fi
 stop_record_timestamp "hydrate"
 
 chroot_mount () {
-    mount --bind /dev $LFS/dev
-    mount -t devpts devpts $LFS/dev/pts -o gid=5,mode=620
-    mount -t proc proc $LFS/proc
-    mount -t sysfs sysfs $LFS/sys
-    mount -t tmpfs tmpfs $LFS/run
+    mount --bind /dev "$LFS/dev"
+    mount -t devpts devpts "$LFS/dev/pts" -o gid=5,mode=620
+    mount -t proc proc "$LFS/proc"
+    mount -t sysfs sysfs "$LFS/sys"
+    mount -t tmpfs tmpfs "$LFS/run"
 }
 
 blocking_unmount () {
@@ -149,21 +149,21 @@ blocking_unmount () {
         return
     fi
 
-    umount -l $1 || true
-    while mountpoint -q $1; do
-        echo $1 is still busy...
+    umount -l "$1" || true
+    while mountpoint -q "$1"; do
+        echo "$1 is still busy..."
         sleep 1
-        umount -l $1 || true
+        umount -l "$1" || true
     done
 }
 
 chroot_unmount () {
     echo "Unmounting chroot"
-    blocking_unmount $LFS/dev/pts
-    blocking_unmount $LFS/dev
-    blocking_unmount $LFS/run
-    blocking_unmount $LFS/proc
-    blocking_unmount $LFS/sys
+    blocking_unmount "$LFS/dev/pts"
+    blocking_unmount "$LFS/dev"
+    blocking_unmount "$LFS/run"
+    blocking_unmount "$LFS/proc"
+    blocking_unmount "$LFS/sys"
 }
 
 chroot_and_print_installed_rpms () {
@@ -325,15 +325,15 @@ start_record_timestamp "build prep"
 echo Setting up initial chroot to build pass1 toolchain RPMs from SPECs
 
 # Configure rpm macros
-mkdir -pv $LFS/usr/etc/rpm
-cp -v $SPECROOT/mariner-rpm-macros/macros $LFS/usr/etc/rpm/macros
-mkdir -pv $LFS/usr/lib/rpm/mariner
-cp -v $SPECROOT/mariner-rpm-macros/gen-ld-script.sh $LFS/usr/lib/rpm/mariner/gen-ld-script.sh
-cp -v $SPECROOT/mariner-rpm-macros/generate-package-note.py $LFS/usr/lib/rpm/mariner/generate-package-note.py
-cp -v $SPECROOT/mariner-rpm-macros/verify-package-notes.sh $LFS/usr/lib/rpm/mariner/verify-package-notes.sh
-mkdir -pv $LFS/usr/lib/rpm/macros.d
-cp -v $MARINER_TOOLCHAIN_MANIFESTS_DIR/macros.override $LFS/usr/lib/rpm/macros.d/macros.override
-cp /etc/resolv.conf $LFS/etc/
+mkdir -pv "$LFS/usr/etc/rpm"
+cp -v "$SPECROOT/mariner-rpm-macros/macros" "$LFS/usr/etc/rpm/macros"
+mkdir -pv "$LFS/usr/lib/rpm/mariner"
+cp -v "$SPECROOT/mariner-rpm-macros/gen-ld-script.sh" "$LFS/usr/lib/rpm/mariner/gen-ld-script.sh"
+cp -v "$SPECROOT/mariner-rpm-macros/generate-package-note.py" "$LFS/usr/lib/rpm/mariner/generate-package-note.py"
+cp -v "$SPECROOT/mariner-rpm-macros/verify-package-notes.sh" "$LFS/usr/lib/rpm/mariner/verify-package-notes.sh"
+mkdir -pv "$LFS/usr/lib/rpm/macros.d"
+cp -v "$MARINER_TOOLCHAIN_MANIFESTS_DIR/macros.override" "$LFS/usr/lib/rpm/macros.d/macros.override"
+cp /etc/resolv.conf "$LFS/etc/"
 
 chroot_and_print_installed_rpms
 

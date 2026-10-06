@@ -46,7 +46,7 @@ fi
 
 # Display a message, wrapping lines at the terminal width.
 message () {
-    echo "$PROGNAME: $*" | fmt -t -w ${COLUMNS:-$DEFCOLUMNS}
+    echo "$PROGNAME: $*" | fmt -t -w "${COLUMNS:-$DEFCOLUMNS}"
 }
 
 # Display an error message.
