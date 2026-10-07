@@ -107,14 +107,14 @@ kdump_static_ip() {
     local _netdev="$1" _srcaddr="$2" _ipv6_flag
     local _netmask _gateway _ipaddr _target _nexthop _route
 
-    _ipaddr=$(ip addr show dev $_netdev permanent | awk "/ $_srcaddr\/.* /{print \$2}")
+    _ipaddr=$(ip addr show dev "$_netdev" permanent | awk "/ $_srcaddr\/.* /{print \$2}")
 
-    if is_ipv6_address $_srcaddr; then
+    if is_ipv6_address "$_srcaddr"; then
         _ipv6_flag="-6"
     fi
 
     if [ -n "$_ipaddr" ]; then
-        _gateway=$(ip $_ipv6_flag route list dev $_netdev | \
+        _gateway=$(ip $_ipv6_flag route list dev "$_netdev" | \
                 awk '/^default /{print $3}' | head -n 1)
 
         if [ "x" !=  "x"$_ipv6_flag ]; then
@@ -123,7 +123,7 @@ kdump_static_ip() {
             _srcaddr="[$_srcaddr]"
             _gateway="[$_gateway]"
         else
-            _netmask=$(ipcalc -m $_ipaddr | cut -d'=' -f2)
+            _netmask=$(ipcalc -m "$_ipaddr" | cut -d'=' -f2)
         fi
         echo -n "${_srcaddr}::${_gateway}:${_netmask}::"
     fi
@@ -137,9 +137,9 @@ kdump_static_ip() {
             _nexthop="[$_nexthop]"
         fi
         echo "rd.route=$_target:$_nexthop:$_netdev"
-    done >> ${initdir}/etc/cmdline.d/45route-static.conf
+    done >> "${initdir}/etc/cmdline.d/45route-static.conf"
 
-    kdump_handle_mulitpath_route $_netdev $_srcaddr
+    kdump_handle_mulitpath_route "$_netdev" "$_srcaddr"
 }
 
 kdump_handle_mulitpath_route() {
@@ -172,10 +172,10 @@ kdump_handle_mulitpath_route() {
             _target=`echo "$_route" | cut -d ' ' -f1`
             _rule="" _max_weight=0 _weight=0
         fi
-    done >> ${initdir}/etc/cmdline.d/45route-static.conf\
+    done >> "${initdir}/etc/cmdline.d/45route-static.conf"\
         <<< "$(/sbin/ip $_ipv6_flag route show)"
 
-    [[ -n $_rule ]] && echo $_rule >> ${initdir}/etc/cmdline.d/45route-static.conf
+    [[ -n "$_rule" ]] && echo "$_rule" >> "${initdir}/etc/cmdline.d/45route-static.conf"
 }
 
 kdump_get_mac_addr() {
