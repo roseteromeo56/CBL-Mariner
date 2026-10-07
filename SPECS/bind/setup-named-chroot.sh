@@ -78,7 +78,7 @@ mount_chroot_conf()
       else
         # Mount source is a directory. Mount it only if directory in chroot is
         # empty.
-        if [ -e "$all" ] && [ `ls -1A $ROOTDIR$all | wc -l` -eq 0 ]; then
+        if [ -e "$all" ] && [ `ls -1A "$ROOTDIR$all" | wc -l` -eq 0 ]; then
           mount --bind --make-private "$all" "$ROOTDIR$all"
         fi
       fi

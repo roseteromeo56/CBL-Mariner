@@ -94,7 +94,11 @@ mount_root() {
     info "Mounting verity root"
     mkdir -p "${VERITY_MOUNT}"
 
+    # Build optional veritysetup arguments without unsafe string re-expansion.
+    set -- --debug --verbose
+
     # Convert error handling options into argument
+    errorarg=
     if [ "${verityerrorhandling}" == "restart" ]; then
         errorarg="--restart-on-corruption"
     elif [ "${verityerrorhandling}" == "panic" ]; then
@@ -105,12 +109,12 @@ mount_root() {
 
     # Convert FEC options to argument
     if [ -n "${verityfecdata}" -a -n "${verityfecroots}" ]; then
-        fecargs="--fec-device=${verityfecdata} --fec-roots=${verityfecroots}"
+        set -- "$@" "--fec-device=${verityfecdata}" "--fec-roots=${verityfecroots}"
     fi
 
     # Convert root hash signature to argument
     if [ -n "${verityroothashsig}" ]; then
-        roothashsigargs="--root-hash-signature=${verityroothashsig}"
+        set -- "$@" "--root-hash-signature=${verityroothashsig}"
     fi
 
     # Get the root hash itself
@@ -124,7 +128,7 @@ mount_root() {
         # verify does not support error handling args, ommit
         info "rd.verityroot.validateonboot is set, validating full read-only root device"
         info "This could take several minutes if forward error correction is being used to rebuild corrupted blocks"
-        veritysetup --debug --verbose ${roothashsigargs} ${fecargs} verify ${veritydisk} ${verityhashtree} ${roothashval} > verity.log 2>&1 || \
+        veritysetup "$@" verify "${veritydisk}" "${verityhashtree}" "${roothashval}" > verity.log 2>&1 || \
             { warn "Failed to validate verity disk" ; cat verity.log | vwarn ; }
 
         # Report any FEC activity, this indicates possible disk failure
@@ -135,7 +139,10 @@ mount_root() {
     fi
 
     info "Creating dm-verity read-only root"
-    veritysetup --debug --verbose ${roothashsigargs} ${errorarg} ${fecargs} open ${veritydisk} ${veritydevicename} ${verityhashtree} ${roothashval} > verity.log 2>&1 || \
+    if [ -n "${errorarg}" ]; then
+        set -- "$@" "${errorarg}"
+    fi
+    veritysetup "$@" open "${veritydisk}" "${veritydevicename}" "${verityhashtree}" "${roothashval}" > verity.log 2>&1 || \
         { cat verity.log | vwarn ; die "Failed to create verity root" ; }
     
     mount -o ro,defaults "/dev/mapper/${veritydevicename}" "${VERITY_MOUNT}" || \
