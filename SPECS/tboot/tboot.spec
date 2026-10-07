@@ -1,7 +1,7 @@
 Summary:        Trusted pre-kernel module and tools.
 Name:           tboot
 Version:        1.10.2
-Release:        1%{?dist}
+Release:        2%{?dist}
 License:        BSD
 Vendor:         Microsoft Corporation
 Distribution:   Mariner
@@ -58,6 +58,9 @@ install -m 755 %{SOURCE2} %{buildroot}%{_docdir}/README.md
 
 
 %changelog
+* Sat Sep 05 2026 Datadog Bits <263423550+datadog-bits@users.noreply.github.com> 1.10.2-2
+- Quote DRTM policy variable expansions to avoid shell word splitting
+
 * Fri Feb 25 2022 Henry Li <lihl@microsoft.com> 1.10.2-1
 - Upgrade to version 1.10.2
 - Add mandatory grub configuration files/tooling that are missing

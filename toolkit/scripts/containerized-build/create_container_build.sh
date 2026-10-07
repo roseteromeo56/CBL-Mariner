@@ -81,13 +81,15 @@ script_dir=$(realpath $(dirname "${BASH_SOURCE[0]}"))
 topdir=/usr/src/mariner
 enable_local_repo=false
 keep_container="--rm"
+mounts=()
+extra_mounts=()
 
 while (( "$#")); do
   case "$1" in
     -m ) mode="$2"; shift 2 ;;
     -v ) version="$2"; shift 2 ;;
     -p ) repo_path="$(realpath $2)"; shift 2 ;;
-    -mo ) extra_mounts="$2"; shift 2 ;;
+    -mo ) read -r -a extra_mounts <<< "$2"; shift 2 ;;
     -b ) build_mount_dir="$(realpath $2)"; shift 2;;
     -ep ) extra_packages="$2"; shift 2;;
     -r ) enable_local_repo=true; shift ;;
@@ -160,7 +162,7 @@ if [[ "${mode}" == "build" ]]; then
     if [ -d "${buildroot_mount}" ]; then rm -Rf ${buildroot_mount}; fi
     mkdir ${build_mount}
     mkdir ${buildroot_mount}
-    mounts="${mounts} ${build_mount}:${topdir}/BUILD ${buildroot_mount}:${topdir}/BUILDROOT"
+    mounts+=("${build_mount}:${topdir}/BUILD" "${buildroot_mount}:${topdir}/BUILDROOT")
 fi
 
 # ============ Setup tools ============
@@ -178,15 +180,15 @@ fi
 # ========= Setup mounts =========
 echo "Setting up mounts..."
 
-mounts="${mounts} $RPMS_DIR:/mnt/RPMS ${tmp_dir}:/mariner_setup_dir"
+mounts+=("${RPMS_DIR}:/mnt/RPMS" "${tmp_dir}:/mariner_setup_dir")
 # Add extra 'build' mounts
 if [[ "${mode}" == "build" ]]; then
-    mounts="${mounts} $BUILD_SRPMS_DIR:/mnt/INTERMEDIATE_SRPMS $SPECS_DIR:${topdir}/SPECS"
+    mounts+=("${BUILD_SRPMS_DIR}:/mnt/INTERMEDIATE_SRPMS" "${SPECS_DIR}:${topdir}/SPECS")
 fi
 
 rm -f ${tmp_dir}/mounts.txt
-for mount in $mounts $extra_mounts; do
-    host_mount_path=$(realpath ${mount%%:*}) #remove suffix starting with ":"
+for mount in "${mounts[@]}" "${extra_mounts[@]}"; do
+    host_mount_path=$(realpath "${mount%%:*}") #remove suffix starting with ":"
     container_mount_path="${mount##*:}"      #remove prefix ending in ":"
     if [[ -d $host_mount_path ]]; then
         echo "$host_mount_path -> $container_mount_path"  >> "${tmp_dir}/mounts.txt"
