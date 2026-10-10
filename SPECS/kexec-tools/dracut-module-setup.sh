@@ -107,14 +107,14 @@ kdump_static_ip() {
     local _netdev="$1" _srcaddr="$2" _ipv6_flag
     local _netmask _gateway _ipaddr _target _nexthop _route
 
-    _ipaddr=$(ip addr show dev $_netdev permanent | awk "/ $_srcaddr\/.* /{print \$2}")
+    _ipaddr=$(ip addr show dev "$_netdev" permanent | awk "/ $_srcaddr\/.* /{print \$2}")
 
-    if is_ipv6_address $_srcaddr; then
+    if is_ipv6_address "$_srcaddr"; then
         _ipv6_flag="-6"
     fi
 
     if [ -n "$_ipaddr" ]; then
-        _gateway=$(ip $_ipv6_flag route list dev $_netdev | \
+        _gateway=$(ip $_ipv6_flag route list dev "$_netdev" | \
                 awk '/^default /{print $3}' | head -n 1)
 
         if [ "x" !=  "x"$_ipv6_flag ]; then
@@ -123,7 +123,7 @@ kdump_static_ip() {
             _srcaddr="[$_srcaddr]"
             _gateway="[$_gateway]"
         else
-            _netmask=$(ipcalc -m $_ipaddr | cut -d'=' -f2)
+            _netmask=$(ipcalc -m "$_ipaddr" | cut -d'=' -f2)
         fi
         echo -n "${_srcaddr}::${_gateway}:${_netmask}::"
     fi
@@ -137,16 +137,16 @@ kdump_static_ip() {
             _nexthop="[$_nexthop]"
         fi
         echo "rd.route=$_target:$_nexthop:$_netdev"
-    done >> ${initdir}/etc/cmdline.d/45route-static.conf
+    done >> "${initdir}/etc/cmdline.d/45route-static.conf"
 
-    kdump_handle_mulitpath_route $_netdev $_srcaddr
+    kdump_handle_mulitpath_route "$_netdev" "$_srcaddr"
 }
 
 kdump_handle_mulitpath_route() {
     local _netdev="$1" _srcaddr="$2" _ipv6_flag
     local _target _nexthop _route _weight _max_weight _rule
 
-    if is_ipv6_address $_srcaddr; then
+    if is_ipv6_address "$_srcaddr"; then
         _ipv6_flag="-6"
     fi
 
@@ -172,10 +172,10 @@ kdump_handle_mulitpath_route() {
             _target=`echo "$_route" | cut -d ' ' -f1`
             _rule="" _max_weight=0 _weight=0
         fi
-    done >> ${initdir}/etc/cmdline.d/45route-static.conf\
+    done >> "${initdir}/etc/cmdline.d/45route-static.conf"\
         <<< "$(/sbin/ip $_ipv6_flag route show)"
 
-    [[ -n $_rule ]] && echo $_rule >> ${initdir}/etc/cmdline.d/45route-static.conf
+    [[ -n "$_rule" ]] && echo "$_rule" >> "${initdir}/etc/cmdline.d/45route-static.conf"
 }
 
 kdump_get_mac_addr() {
@@ -259,7 +259,7 @@ kdump_setup_team() {
     local _team_conf="${initdir}/tmp/$$-$_netdev.conf"
     for _dev in `teamnl "$_netdev" ports | awk -F':' '{print $2}'`; do
         _mac=$(kdump_get_perm_addr $_dev)
-        _kdumpdev=$(kdump_setup_ifname $_dev)
+        _kdumpdev=$(kdump_setup_ifname "$_dev")
         echo -n " ifname=$_kdumpdev:$_mac" >> ${initdir}/etc/cmdline.d/44team.conf
         _slaves+="$_kdumpdev,"
     done
@@ -352,13 +352,13 @@ kdump_install_net() {
     _route=$(kdump_get_ip_route $_destaddr)
     _srcaddr=$(kdump_get_ip_route_field "$_route" "src")
     _netdev=$(kdump_get_ip_route_field "$_route" "dev")
-    _netmac=$(kdump_get_mac_addr $_netdev)
+    _netmac=$(kdump_get_mac_addr "$_netdev")
 
     if [ "$(uname -m)" = "s390x" ]; then
         kdump_setup_znet $_netdev
     fi
 
-    _static=$(kdump_static_ip $_netdev $_srcaddr)
+    _static=$(kdump_static_ip "$_netdev" "$_srcaddr")
     if [ -n "$_static" ]; then
         _proto=none
     elif is_ipv6_address $_srcaddr; then
@@ -407,9 +407,10 @@ kdump_install_net() {
     # call kdump_install_net again and we don't want eth1 to be the default
     # gateway.
     if [ ! -f ${initdir}/etc/cmdline.d/60kdumpnic.conf ] &&
-       [ ! -f ${initdir}/etc/cmdline.d/70bootdev.conf ]; then
+       [ ! -f ${initdir}/etc/cmdline.d/70bootdev.conf ]; then dd/automation/fix/kdump-bootdev-quoting-3d565d87
         echo "kdumpnic=$(kdump_setup_ifname $_netdev)" > ${initdir}/etc/cmdline.d/60kdumpnic.conf
-        echo "bootdev=$(kdump_setup_ifname $_netdev)" > ${initdir}/etc/cmdline.d/70bootdev.conf
+        echo "kdumpnic=$(kdump_setup_ifname "$_netdev")" > ${initdir}/etc/cmdline.d/60kdumpnic.conf 2.0
+        echo "bootdev=$(kdump_setup_ifname "$_netdev")" > ${initdir}/etc/cmdline.d/70bootdev.conf
     fi
 }
 
@@ -711,13 +712,13 @@ get_pcs_fence_kdump_nodes() {
         eval $node
         nodename=$uname
         # Skip its own node name
-        if is_localhost $nodename; then
+        if is_localhost "$nodename"; then
             continue
         fi
         nodes="$nodes $nodename"
     done
 
-    echo $nodes
+    printf '%s\n' "${nodes# }"
 }
 
 # retrieves fence_kdump args from config file

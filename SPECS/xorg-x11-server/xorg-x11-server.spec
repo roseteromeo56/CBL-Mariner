@@ -21,7 +21,7 @@
 Summary:        X.Org X11 X server
 Name:           xorg-x11-server
 Version:        1.20.10
-Release:        10%{?dist}
+Release:        11%{?dist}
 License:        MIT
 Vendor:         Microsoft Corporation
 Distribution:   Mariner
@@ -391,6 +391,9 @@ find %{buildroot} -type f -name "*.la" -delete -print
 %{_datadir}/aclocal/xorg-server.m4
 
 %changelog
+* Sat Sep 05 2026 Datadog Bits <263423550+datadog-bits@users.noreply.github.com> - 1.20.10-11
+- Quote the xvfb-run terminal width to prevent shell word splitting
+
 * Thu Mar 28 2024 Alberto David Perez Guevara <aperezguevar@microsoft.com> - 1.20.10-10
 - Add patch for CVE-2023-5380
 

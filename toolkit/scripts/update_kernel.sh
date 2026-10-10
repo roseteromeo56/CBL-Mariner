@@ -14,14 +14,14 @@ function copy_local_tarball { dd/fix/quote-kernel-update-expansions
 
 # $1 = spec name
 function remove_local_tarball {
-    rm $WORKSPACE/SPECS/$1/$TARBALL_NAME
+    rm -- "$WORKSPACE/SPECS/$1/$TARBALL_NAME"
 }
 
 function clean {
     rm -rf $TMPDIR
     for spec in $SPECS
     do
-        remove_local_tarball $spec
+        remove_local_tarball "$spec"
     done
 }
 
@@ -143,7 +143,7 @@ function update_toolchain_pkglist {
         file=$PKGLIST_FOLDER/$pkg
         PATTERN="kernel-headers-.*"
         REPLACE="kernel-headers-$VERSION-1.cm2.noarch.rpm"
-        sed -i "s/$PATTERN/$REPLACE/" $file
+        sed -i "s/$PATTERN/$REPLACE/" -- "$file"
     done
 }
 
@@ -160,7 +160,7 @@ function replace_cgversion {
     do
         PATTERN="\"name\": \"$spec\","
         REPLACE="\ \ \ \ \ \ \ \ \ \ \"version\": \"$VERSION\","
-        sed -i "/$PATTERN/!b;n;c$REPLACE" $1
+        sed -i "/$PATTERN/!b;n;c$REPLACE" "$1"
     done
 }
 
@@ -169,9 +169,9 @@ function update_cgmanifest {
     # Replace URL
     PATTERN="$DEFAULT_URL.*"
     REPLACE="$FULL_URL\""
-    sed -i "s#$PATTERN#$REPLACE#" $CGMANIFEST_FILE
+    sed -i "s#$PATTERN#$REPLACE#" "$CGMANIFEST_FILE"
     # Replace version
-    replace_cgversion $CGMANIFEST_FILE
+    replace_cgversion "$CGMANIFEST_FILE"
 }
 
 function print_metadata {
