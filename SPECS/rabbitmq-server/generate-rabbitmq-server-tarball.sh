@@ -74,7 +74,7 @@ echo "[END] Retrieve all deps"
 
 # tar pulled dependencies
 tar -czf "$VENDOR_TARBALL_NAME.tar.gz" -- "hex-$ELIXIR_HEX_VERSION.tar.gz" "${HEX_PACKAGES[@]/%/.tar}"
-mv $VENDOR_TARBALL_NAME.tar.gz ../$VENDOR_TARBALL_NAME.tar.gz
+mv -- "$VENDOR_TARBALL_NAME.tar.gz" "../$VENDOR_TARBALL_NAME.tar.gz"
 
 # Clean up files
 popd
