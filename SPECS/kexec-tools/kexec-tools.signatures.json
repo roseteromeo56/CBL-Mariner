@@ -9,6 +9,9 @@
   "dracut-kdump-error-handler.service": "d5cd3a6cce04955a07ae5cd7790ae17365b90a4989f1888d7b7f487316a1544d",
   "dracut-kdump-error-handler.sh": "23bb509940a9ecc3944bb88526b974f49cfb7d6c133fe11615d8d4604141e4c9",
   "dracut-kdump.sh": "733594d1c5ab4928af7c361426cb485264a7505c68ff7b906e8ea30f7eb69509",
+ dd/automation/fix/kdump-bond-path-0b8e7059-20260905
+  "dracut-module-setup.sh": "afbd4a512a645e266c7757ddfab4e4f71b11961482fd63d26024f454a6cff5dd",
+
  dd/automation/harden-kdump-path-expansion-20260905
   "dracut-module-setup.sh": "869b517015845082be2ec40dd1d73e614271fb64d7e26d37666b949de41cd287",
 
@@ -16,6 +19,7 @@
   "dracut-module-setup.sh": "85fca83ebc05be3f82139088984ed4ed53dfd2ecfae53873e19f09d0578fc615",
 
   "dracut-module-setup.sh": "4b2028f7f734930466a536634774b08cb2badc7f4e4b572d2cd5b98d49ede713", 2.0
+ 2.0
  2.0
   "dracut-monitor_dd_progress": "2e343a54c032f6af0d5f7b5fb49f2d90057b2a234625fe7ee6c1afb21cb5c435",
   "early-kdump-howto.txt": "984d51f3d9e7f2f858ef153418190c470bf20ee702c97fe34285c6d05078999c",
