@@ -50,7 +50,7 @@ GOPATH_ROOK="$GOPATH/src/github.com/rook/rook"
 
 # For dep to get dependencies correctly, git repos must be located in their upstream locations in
 # the GOPATH. i.e., we have to clone SUSE/rook to github.com/rook/rook
-mkdir --parents $GOPATH_ROOK
+mkdir --parents "$GOPATH_ROOK"
 git -C $GOPATH_ROOK/.. clone https://$ROOK_REPO.git
 
 cd "$GOPATH_ROOK"

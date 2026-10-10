@@ -26,7 +26,7 @@ echo "Expanding rpms into MACRO_DIR ${dir}"
 while read p || [ -n "$p" ]; do
     # Regex find for rpms with the correct package name
     # Reverse sort the list so the highest version/revision is the top result
-    exact=`find ${rpmdir} -regextype sed -regex ".*/$p-[^-]*-[^-]*.rpm" | sort -r | head -1`
+    exact=`find "${rpmdir}" -regextype sed -regex ".*/$p-[^-]*-[^-]*.rpm" | sort -r | head -1`
 
     if test -z "$exact"
     then

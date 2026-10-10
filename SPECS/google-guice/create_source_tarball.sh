@@ -65,7 +65,7 @@ tar xf "../${name}-${version}.orig.tar.gz"
 # CLEAN TARBALL dd/fix/google-guice-quoted-version-expansion
 cd "./guice-${version}"
 cd "./guice-$version" 2.0
-rm -rf $(ls . | grep -E -v 'core|extensions|pom|bom|jdk8-tests|COPYING|common.xml')
+find . -mindepth 1 -maxdepth 1 ! -name '.*' ! \( -name '*core*' -o -name '*extensions*' -o -name '*pom*' -o -name '*bom*' -o -name '*jdk8-tests*' -o -name '*COPYING*' -o -name '*common.xml*' \) -exec rm -rf -- {} +
 find . -name "*.jar" -delete
 find . -name "*.class" -delete
 cd ..
