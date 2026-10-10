@@ -85,7 +85,7 @@ function installUtils {
 
 function buildMaven {
 	echo "Downloading maven sources from $SOURCEURL."
-	pushd $tempDir
+	pushd "$tempDir"
 	wget $SOURCEURL -O mavensrc.tar.gz
 	tar -xf mavensrc.tar.gz
 	cd apache-maven-$VERSION
