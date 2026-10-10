@@ -14,7 +14,7 @@ url="http://www.w3.org/TR/2002/REC-xhtml1-$date/xhtml1.tgz"
 curl -O $url
 tar zxf $(basename $url)
 find xhtml1-$date -type f | grep -vF /DTD/ | xargs rm
-rm $(basename $url)
+rm "$(basename $url)"
 
 tar Jcvf xhtml1-dtds-$date.tar.xz xhtml1-$date
 rm -r xhtml1-$date
