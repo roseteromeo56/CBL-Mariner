@@ -21,7 +21,7 @@ do
 done
 
 ## Create $SOURCES_DIR
-mkdir -p $SOURCES_DIR
+mkdir -p "$SOURCES_DIR"
 
 # Create symlink from SPECS/ to SOURCES/ when rpm is called
 rpm() {
