@@ -205,7 +205,7 @@ chroot_and_install_rpms () {
         # Do not include any files with "debuginfo" in the name
         find $CHROOT_RPMS_DIR -name "$2*$verrel*" ! -name "*debuginfo*" -exec cp {} $CHROOT_INSTALL_RPM_DIR ';'
     else
-        find $CHROOT_RPMS_DIR -name "$1*" ! -name "*debuginfo*" -exec cp {} $CHROOT_INSTALL_RPM_DIR ';'
+        find "$CHROOT_RPMS_DIR" -name "$1*" ! -name "*debuginfo*" -exec cp {} "$CHROOT_INSTALL_RPM_DIR" ';'
     fi
 
     chroot_mount
