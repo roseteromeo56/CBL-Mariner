@@ -44,7 +44,7 @@ is_nfs_dump_target()
         return 0;
     fi
 
-    if is_fs_type_nfs $(get_dracut_args_fstype "$(grep "^dracut_args .*\-\-mount" /etc/kdump.conf)"); then
+    if is_fs_type_nfs "$(get_dracut_args_fstype "$(grep "^dracut_args .*\-\-mount" /etc/kdump.conf)")"; then
         return 0
     fi
 
