@@ -32,7 +32,8 @@ do
     fi
 
     echo "Downloading sources for '$spec'."
-    wget -q -P "$TEMP_DIR" $(jq ".Registrations[].component | select(.other != null).other | select(.name == \"$spec\") | .downloadUrl" -r "$cgmanifest_path")
+    mapfile -t source_urls < <(jq ".Registrations[].component | select(.other != null).other | select(.name == \"$spec\") | .downloadUrl" -r "$cgmanifest_path")
+    wget -q -P "$TEMP_DIR" "${source_urls[@]}"
 done
 
 mkdir -p "$OUTPUT_DIR"
