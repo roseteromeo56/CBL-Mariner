@@ -2,7 +2,7 @@
 set -e
 
 name=objectweb-asm
-version="$(sed -n 's/Version:\s*//p' *.spec)"
+version="$(sed -n 's/Version:\s*//p' ./*.spec)"
 gittag="ASM_${version//./_}"
 
 # RETRIEVE
