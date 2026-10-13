@@ -154,7 +154,7 @@ get_block_dump_target()
     fi
 
     _target=$(get_user_configured_dump_disk)
-    [ -n "$_target" ] && echo $(to_dev_name $_target) && return
+    [ -n "$_target" ] && echo "$(to_dev_name $_target)" && return
 
     # Get block device name from local save path
     _path=$(get_save_path)
