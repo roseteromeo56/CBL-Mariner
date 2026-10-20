@@ -415,7 +415,7 @@ echo Findutils-4.8.0
 tar xf findutils-4.8.0.tar.xz
 pushd findutils-4.8.0
 ./configure --prefix=/tools
-make -j$(nproc)
+make -j"$(nproc)"
 make install
 popd
 rm -rf findutils-4.8.0
