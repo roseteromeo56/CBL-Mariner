@@ -12,7 +12,7 @@ date="20020801"
 url="http://www.w3.org/TR/2002/REC-xhtml1-$date/xhtml1.tgz"
 
 curl -O $url
-tar zxf $(basename $url)
+tar zxf "$(basename $url)"
 find xhtml1-$date -type f | grep -vF /DTD/ | xargs rm
 rm "$(basename $url)"
 
