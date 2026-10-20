@@ -77,7 +77,7 @@ if [ "$EUID" -ne 0 ]; then
   exit
 fi
 
-script_dir=$(realpath $(dirname "${BASH_SOURCE[0]}"))
+script_dir=$(realpath "$(dirname "${BASH_SOURCE[0]}")")
 topdir=/usr/src/mariner
 enable_local_repo=false
 keep_container="--rm"
