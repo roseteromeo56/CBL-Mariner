@@ -390,7 +390,7 @@ echo File-5.40
 tar xf file-5.40.tar.gz
 pushd file-5.40
 ./configure --prefix=/tools
-make -j$(nproc)
+make -j"$(nproc)"
 make install
 popd
 rm -rf file-5.40
