@@ -217,7 +217,7 @@ sed -e '/static.*SIGSTKSZ/d' \
     -e 's/return kAltStackSize/return SIGSTKSZ * 4/' \
     -i libsanitizer/sanitizer_common/sanitizer_posix_libcdep.cpp
 cat gcc/limitx.h gcc/glimits.h gcc/limity.h > \
-  `dirname $($LFS_TGT-gcc -print-libgcc-file-name)`/include-fixed/limits.h
+  `dirname "$($LFS_TGT-gcc -print-libgcc-file-name)"`/include-fixed/limits.h
 case $(uname -m) in
     x86_64)
       for file in gcc/config/{linux,i386/linux{,64}}.h
