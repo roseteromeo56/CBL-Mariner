@@ -689,7 +689,7 @@ check_boot_dir()
     if ! is_atomic || [ "$(uname -m)" = "s390x" ]; then
         kdump_bootdir="/boot"
     else
-        eval $(cat /proc/cmdline| grep "BOOT_IMAGE" | cut -d' ' -f1)
+        eval "$(cat /proc/cmdline| grep "BOOT_IMAGE" | cut -d' ' -f1)"
         kdump_bootdir="/boot"$(dirname ${BOOT_IMAGE#*)})
     fi
     echo $kdump_bootdir
