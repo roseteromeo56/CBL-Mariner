@@ -437,7 +437,7 @@ echo Gettext-0.19.8.1
 tar xf gettext-0.19.8.1.tar.xz
 pushd gettext-0.19.8.1
 ./configure --disable-shared
-make -j$(nproc)
+make -j"$(nproc)"
 cp -v gettext-tools/src/{msgfmt,msgmerge,xgettext} /tools/bin
 popd
 rm -rf gettext-0.19.8.1
