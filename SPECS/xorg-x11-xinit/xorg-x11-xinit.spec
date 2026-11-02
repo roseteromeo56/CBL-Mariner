@@ -2,7 +2,7 @@
 Summary:        X.Org X11 X Window System xinit startup scripts
 Name:           xorg-x11-%{pkgname}
 Version:        1.4.0
-Release:        8%{?dist}
+Release:        9%{?dist}
 License:        MIT
 Vendor:         Microsoft Corporation
 Distribution:   Mariner
@@ -111,6 +111,9 @@ install -p -m 755 %{SOURCE19} %{buildroot}%{_libexecdir}
 %{_datadir}/xsessions/xinit-compat.desktop
 
 %changelog
+* Mon Nov 02 2026 Romeo Rosete <208020944+roseteromeo56@users.noreply.github.com> - 1.4.0-9
+- Bump release for localuser.sh update
+
 * Wed Dec 08 2021 Thomas Crain <thcrain@microsoft.com> - 1.4.0-8
 - License verified
 - Lint spec
