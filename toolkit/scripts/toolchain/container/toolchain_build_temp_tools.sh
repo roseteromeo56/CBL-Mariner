@@ -28,7 +28,7 @@ cd build
     --target="$LFS_TGT" \
     --disable-nls \
     --disable-werror
-make -j$(nproc)
+make -j"$(nproc)"
 mkdir -v /tools/lib && ln -sv lib /tools/lib64
 make install
 popd
