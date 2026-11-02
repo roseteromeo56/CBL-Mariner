@@ -108,7 +108,7 @@ cd       build
     --disable-libvtv                               \
     --disable-libstdcxx                            \
     --enable-languages=c,c++
-make -j$(nproc)
+make -j"$(nproc)"
 make install
 popd
 rm -rf gcc-11.2.0
