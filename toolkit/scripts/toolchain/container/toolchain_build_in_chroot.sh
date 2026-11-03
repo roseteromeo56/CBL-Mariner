@@ -843,7 +843,7 @@ echo Findutils-4.8.0
 tar xf findutils-4.8.0.tar.xz
 pushd findutils-4.8.0
 ./configure --prefix=/usr --localstatedir=/var/lib/locate
-make -j$(nproc)
+make -j"$(nproc)"
 make install
 #mv -v /usr/bin/find /bin
 sed -i 's|find:=${BINDIR}|find:=/bin|' /usr/bin/updatedb
