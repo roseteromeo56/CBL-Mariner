@@ -142,7 +142,7 @@ cd       build
       --with-headers=/tools/include      \
       libc_cv_forced_unwind=yes          \
       libc_cv_c_cleanup=yes
-make -j$(nproc)
+make -j"$(nproc)"
 make install
 echo sanity check - temptoolchain - glibc
 set +e
