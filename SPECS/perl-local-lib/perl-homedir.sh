@@ -12,5 +12,5 @@ alias perlll='eval `perl -Mlocal::lib`'
 # if system default
 if [ "x$PERL_HOMEDIR" = "x1" ] ; then
 
-    eval `perl -Mlocal::lib`
+    eval "`perl -Mlocal::lib`"
 fi
