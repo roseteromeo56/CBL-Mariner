@@ -304,7 +304,7 @@ get_kdump_mntpoint_from_target()
 # get_option_value <option_name>
 # retrieves value of option defined in kdump.conf
 get_option_value() {
-    strip_comments `grep "^$1[[:space:]]\+" /etc/kdump.conf | tail -1 | cut -d\  -f2-`
+    strip_comments "`grep "^$1[[:space:]]\+" /etc/kdump.conf | tail -1 | cut -d\  -f2-`"
 }
 
 kdump_get_persistent_dev() {
