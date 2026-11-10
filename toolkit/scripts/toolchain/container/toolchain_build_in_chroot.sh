@@ -115,7 +115,7 @@ CC="gcc -isystem $GCC_INCDIR -isystem /usr/include" \
 # checking whether to use .ctors/.dtors header and trailer... configure: error: missing __attribute__ ((constructor)) support??
 # adding 'libc_cv_ctors_header=yes'
 unset GCC_INCDIR
-make -j$(nproc)
+make -j"$(nproc)"
 touch /etc/ld.so.conf
 sed '/test-installation/s@$(PERL)@echo not running@' -i ../Makefile
 make install
